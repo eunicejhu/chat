@@ -1,0 +1,33 @@
+@import 'base';
+@import 'spa.shell';
+
+body {
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	background-color: #777;
+}
+
+#spa {
+	position: absolute;
+	top: 8px;
+	bottom: 8px;
+	left: 8px;
+	right: 8px;
+
+	min-height: 500px;
+	min-width: 500px;
+	overflow: hidden;
+
+	background-color: #fff;
+	border-radius: 8px 8px 0 8px;
+}
+
+.spa-x-select {}
+.spa-x-clearfloat {
+	height: 0 !important;
+	float: none !important;
+	visibility: hidden !important;
+	clear: both !important;
+}
+

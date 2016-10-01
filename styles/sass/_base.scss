@@ -1,0 +1,49 @@
+$generalFontColor: #444;
+$black: #000;
+
+
+/**
+ * Begin reset
+ */
+* {
+	margin: 0;
+	padding: 0;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+h1,h2,h3,h4,h5,h6,p {
+	margin-bottom: 10px;
+}
+ol,ul,dl {
+	list-style-position: inside;
+}
+/** End reset */
+
+/**
+ * Begin standard selectors
+ */
+body {
+	font: 13px 'Trebuchet MS', Verdana, Helvetica, Arial, sans-serif;
+	color: $generalFontColor;
+	background-color: $black;
+}
+a {
+	text-decoration: none;
+	&:link, &:visited, {
+		color: inherit;
+	}
+	&:hover {
+		text-decoration: underline;
+	}
+
+}
+strong {
+	font-weight: 800;
+	color: $black;
+}
+/** End standard selectors */
+
+
+
+
