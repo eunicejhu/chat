@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "webpack-dev-server --context-base . --hot"
+    "dev": "webpack-dev-server --context-base . "
   },
   "repository": {
     "type": "git",

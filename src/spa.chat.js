@@ -13,12 +13,12 @@ export default class Spa_chat {
 			main_html: `
 				<div class="spa-chat">
 					<div class="spa-chat-head">
-						<div class="spa-chat-head-toggle"></div>
+						<div class="spa-chat-head-toggle">+</div>
 						<div class="spa-chat-head-title">
 							Chat
 						</div>
 					</div>
-					<div class="spa-chat-closer"></div>
+					<div class="spa-chat-closer">x</div>
 					<div class="spa-chat-sizer">
 						<div class="spa-chat-msgs"></div>
 						<div class="spa-chat-box">
@@ -31,25 +31,25 @@ export default class Spa_chat {
 			settable_map: {
 				slider_open_time: true,
 				slider_close_time: true,
-				slider_open_em: true,
-				slider_close_em: true,
+				slider_opened_em: true,
+				slider_closed_em: true,
 				slider_opened_title: true,
 				slider_closed_title: true,
 
+				spa_shell: true,
 				chat_model: true,
-				people_modle: true,
+				people_model: true,
 				set_chat_anchor: true
 			},
 			slider_open_time: 250,
 			slider_close_time: 250,
-			slider_open_em: 16,
-			slider_close_em: 2,
+			slider_opened_em: 16,
+			slider_closed_em: 2,
 			slider_opened_title: 'Click to close',
 			slider_closed_title: 'Click to open',
 			chat_model: null,
 			people_modle: null,
 			set_chat_anchor: null
-
 		};
 		this.stateMap = {
 			$append_target: null,
@@ -119,17 +119,6 @@ export default class Spa_chat {
 		return true;
 	}
 	/**
-	 * [_setChatAnchor change the chat component of the anchor]
-	 * @param {[type]} postion_type ['closed' or 'opened']
-	 * Action: changes the URI anchor parameter 'chat' to the requested value if possible
-	 * Returns:
-	 * 		* true - requested anchor part was updated
-	 * 		* false - not updated
-	 */
-	_setChatAnchor(position_type) {
-
-	}
-	/**
 	 * [setSliderPosition Ensure chat slider is in the requested state]
 	 * @param {[type]}   position_type [enum('closed', 'opened', or 'hidden')]
 	 * @param {Function} callback      [optional callback at end of animation]
@@ -152,7 +141,7 @@ export default class Spa_chat {
 			return true;
 		}
 
-		switch(postion_type) {
+		switch(position_type) {
 			case 'opened':
 				height_px = this.stateMap.slider_opened_px;
 				animate_time = this.configMap.slider_open_time;
@@ -210,14 +199,14 @@ export default class Spa_chat {
 			px_per_em, 
 			opened_height_em;
 		px_per_em = this._getEmSize(this.jqueryMap.$slider.get(0));
-		opened_height_em = this.configMap.slider_open_em;
+		opened_height_em = this.configMap.slider_opened_em;
 
 		this.stateMap.px_per_em = px_per_em;
 
-		this.stateMap.slider_closed_px = this.configMap.slider_close_em * px_per_em;
-		this.stateMap.slider_opened_px = this.configMap.slider_open_em * px_per_em;
+		this.stateMap.slider_closed_px = this.configMap.slider_closed_em * px_per_em;
+		this.stateMap.slider_opened_px = this.configMap.slider_opened_em * px_per_em;
 
-		this.jqueryMap.$slider.css({
+		this.jqueryMap.$sizer.css({
 			height: (opened_height_em - 2) * px_per_em
 		});
 	}
@@ -227,9 +216,9 @@ export default class Spa_chat {
 			self = event.data,
 			set_chat_anchor = self.configMap.set_chat_anchor;
 		if(self.stateMap.position_type === 'opened') {
-			set_chat_anchor('closed');
+			// set_chat_anchor(self.configMap.spa_shell, 'closed');
 		} else if(self.stateMap.position_type === 'closed') {
-			set_chat_anchor('opened');
+			// set_chat_anchor(self.configMap.spa_shell,'opened');
 		}
 		return false;
 	}

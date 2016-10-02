@@ -6,6 +6,7 @@ class Spa {
 	initModule($container) {
 		let 
 			spa_shell = new Spa_shell();
+		spa_shell.configModule({spa_shell: spa_shell});
 		spa_shell.initModule($container);
 	}
 }
