@@ -1,9 +1,11 @@
 import Spa_shell from "./spa.shell";
-require("../styles/sass/index.scss");
+require("../styles/sass/spa.scss");
 // let $ = require('jquery') obsolete, because plugin is provided in webpack.config.js
+
 class Spa {
 	initModule($container) {
-		let spa_shell = new Spa_shell();
+		let 
+			spa_shell = new Spa_shell();
 		spa_shell.initModule($container);
 	}
 }

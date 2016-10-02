@@ -1,0 +1,134 @@
+$gray: #888;
+$darkRed: #800;
+$lightGray: #ddd;
+$hoverGray: #aaa;
+$darkGray: #444;
+$black: #404040;
+$white: #fff;
+$yellow: #ff0;
+
+.spa-chat {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	width: 25em;
+	height: 2em;
+	background: #fff;
+	border-radius: 0.5em 0 0 0;
+	border-style: solid;
+	border-width: thin 0 0 thin;
+	border-color: $gray;
+	box-shadow: 0 0 0.75em 0 $gray;
+	z-index: 1;
+}
+
+.spa-chat-head,
+.spa-chat-closer {
+	position: absolute;
+
+	top: 0;
+	height: 2em;
+	line-height: 1.8em;
+	border-bottom: thin solid $gray;
+	cursor: pointer;
+	background: $gray;
+	color: white;
+	font-family: arial, helvetica, sans-serif;
+	font-weight: 800;
+	text-align: center;
+}
+
+.spa-chat-head {
+	left: 0;
+	right: 2em;
+	border-radius: 0.3em 0 0 0;
+}
+
+.spa-chat-closer {
+	right: 0;
+	width: 2em;
+	&:hover {
+		background: $darkRed;
+	}
+}
+
+.spa-chat-head-toggle {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 2em;
+	bottom: 0;
+	border-radius: 0.3em 0 0 0;
+}
+
+.spa-chat-head-title {
+	position: absolute;
+	left: 50%;
+	width: 16em;
+	margin-left: -8em;
+}
+
+.spa-chat-sizer {
+	position: absolute;
+	top: 2em;
+	left: 0;
+	right: 0;
+}
+
+.spa-chat-msgs {
+	psition: absolute;
+	top: 1em;
+	left: 1em;
+	right: 1em;
+	bottom: 4em;
+	padding: 0.5em;
+	border: thin solid $gray;
+	overflow-x: hidden;
+	overflow-y: scroll;
+}
+
+.spa-chat-box {
+	position: absolute;
+	height: 2em;
+
+	left: 1em;
+	right: 1em;
+	bottom: 4em;
+	border: thin solid $gray;
+	background-color: $gray;
+
+	input[type=text] {
+		float: left;
+		width: 75%;
+		height: 100%;
+		padding: 0.5em;
+		border: 0;
+		background-color: $lightGray;
+		color: $black;
+
+		&:focus {
+			background-color: $white;
+		}
+	}
+
+	div {
+		float: left;
+		width: 25%;
+		height: 2em;
+		line-height: 1.9em;
+		text-align: center;
+		color: $white;
+		font-weight: 800;
+		cursor: pointer;
+
+		&:hover {
+			background-color: $darkGray;
+			color: $yellow;
+		}
+	}	
+}
+
+.spa-chat-head:hover
+.spa-chat-head-toggle {
+	background-color: $hoverGray;
+}

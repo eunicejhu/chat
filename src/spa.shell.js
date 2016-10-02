@@ -1,4 +1,7 @@
 require("jquery.urianchor");
+require("../styles/sass/spa.shell.scss");
+import Spa_chat from "./spa.chat";
+
 export default class Spa_shell {
 	constructor() {
 		this.configMap = {
@@ -38,9 +41,9 @@ export default class Spa_shell {
 	}
 
 	/**
-	 * [setJqueryMap DOM method]
+	 * [_setJqueryMap DOM method]
 	 */
-	setJqueryMap() {
+	_setJqueryMap() {
 		let $container = this.stateMap.$container;
 		this.jqueryMap = {
 			$container: $container,
@@ -54,25 +57,30 @@ export default class Spa_shell {
 	 * @return {[type]}            [description]
 	 */
 	initModule($container) {
+		let 
+			spa_chat = new Spa_chat();
 		//load HTML and map jQuery collections
 		this.stateMap.$container = $container;
 		$container.html(this.configMap.main_html);
-		this.setJqueryMap();
+		this._setJqueryMap();
 
 		this.stateMap.is_chat_retracted = true;
 		this.jqueryMap.$chat
 			.attr('title', this.configMap.chat_retract_title)
-			.click(this, this.onClickChat);
+			.click(this, this._onClickChat);
 		//configure uriAnchor to use our schema
 		$.uriAnchor.configModule({
 			schema_map: this.configMap.anchor_schema_map
 		});
 		$(window)
-			.bind('hashchange', this, this.onHashchange)
+			.bind('hashchange', this, this._onHashchange)
 			.trigger('hashchange'); //open from bookmark, get the stored state from initial load
-	}
+		//configure and initilize feature modules
+		spa_chat.configModule({});
+		spa_chat.initModule(this.jqueryMap.$chat);
+	}	
 	/**
-	 * [toggleChat description]
+	 * [_toggleChat description]
 	 * @param  {[boolean]}   do_extend [if true, extends slider, if false retracts ]
 	 * @param  {Function} callback  [optional function to execute at end of animation]
 	 * @return {[boolean]}             [* true - slider animation activated, 
@@ -81,7 +89,7 @@ export default class Spa_shell {
 	 *  	* true - slider is retracted
 	 *  	* false - slider is extended
 	 */
-	toggleChat(do_extend, callback) {
+	_toggleChat(do_extend, callback) {
 		let 
 			self = this,
 			px_chat_ht = this.jqueryMap.$chat.height(),
@@ -126,30 +134,30 @@ export default class Spa_shell {
 		return true;
 	}
 
-	onClickChat(event) {
+	_onClickChat(event) {
 		let 
 			self = event.data;
-		// if(self.toggleChat( self.stateMap.is_chat_retracted)) {
+		// if(self._toggleChat( self.stateMap.is_chat_retracted)) {
 		// 	$.uriAnchor.setAnchor({
 		// 		chat: (self.stateMap.is_chat_retracted ? 'open' : 'closed')
 		// 	});
 		// }
-		self.changeAnchorPart({
+		self._changeAnchorPart({
 			chat: (self.stateMap.is_chat_retracted ? 'open' : 'closed')
 		})
 		return false;
 	}
 	/**
-	 * [copyAnchorMap minimize overhead]
+	 * [_copyAnchorMap minimize overhead]
 	 * @return {[type]} []
 	 */
-	copyAnchorMap() {
+	_copyAnchorMap() {
 		return $.extend(true, {}, this.stateMap.anchor_map);
 	}
 
-	changeAnchorPart(arg_map) {
+	_changeAnchorPart(arg_map) {
 		let 
-			anchor_map_revise = this.copyAnchorMap(),
+			anchor_map_revise = this._copyAnchorMap(),
 			bool_return = true,
 			key_name, key_name_dep;
 		//merge changes into anchor_map
@@ -180,7 +188,7 @@ export default class Spa_shell {
 		return bool_return;
 	}
 	/**
-	 * [onHashchange handle URI anchor changes]
+	 * [_onHashchange handle URI anchor changes]
 	 * @param  {[type]} event [description]
 	 * @return {[type]}       [description]
 	 *  Action: 
@@ -188,10 +196,10 @@ export default class Spa_shell {
 	 *  	* Compares proposed application state with current
 	 *  	* Adjust the application only where proposed state differs from existing
 	 */
-	onHashchange(event) {
+	_onHashchange(event) {
 		let
 			self  = event.data,
-			anchor_map_previous = self.copyAnchorMap(),
+			anchor_map_previous = self._copyAnchorMap(),
 			anchor_map_proposed,
 			_s_chat_previous, _s_chat_proposed,
 			s_chat_proposed;
@@ -213,13 +221,13 @@ export default class Spa_shell {
 			s_chat_proposed = anchor_map_proposed.chat;
 			switch(s_chat_proposed) {
 				case 'open':
-					self.toggleChat(true);
+					self._toggleChat(true);
 					break;
 				case 'closed':
-					self.toggleChat(false);
+					self._toggleChat(false);
 					break;
 				default:
-					self.toggleChat(false);
+					self._toggleChat(false);
 					delete anchor_map_proposed.chat;
 					$.uriAnchor.setAnchor(anchor_map_proposed, null, true);
 			}
