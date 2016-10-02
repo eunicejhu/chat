@@ -2,9 +2,6 @@ require("jquery.urianchor");
 require("../styles/sass/spa.shell.scss");
 import Spa_model from "./spa.model";
 import Spa_chat from "./spa.chat";
-import Spa_util from "./spa.util";
-
-
 
 export default class Spa_shell {
 	constructor() {
@@ -15,6 +12,7 @@ export default class Spa_shell {
 					closed: true
 				}
 			},
+			resize_interval: 200,
 			main_html: `
 			 	<div class="spa-shell-head">
 					<div class="spa-shell-head-logo"></div>
@@ -28,20 +26,15 @@ export default class Spa_shell {
 				<div class="spa-shell-foot"></div>
 				<div class="spa-shell-chat"></div>
 				<div class="spa-shell-modal"></div>
-			 `,
-			 chat_extend_time: 250,
-			 chat_retract_time: 300,
-			 chat_extend_height: 450,
-			 chat_retract_height: 15,
-			 chat_extend_title: 'Click to retract',
-			 chat_retract_title: 'Click to extend'
+			 `
 		};
 		this.stateMap = {
 			$container: null,
+			spa_shell: null,
 			spa_chat: null,
 			spa_model: null,
 			anchor_map: {}, //store the current anchor values in a map
-			is_chat_retracted: true //used in toggelChat
+			resize_idto: undefined //retain the resize timeout ID
 		};
 		this.jqueryMap = {};
 	}
@@ -73,8 +66,6 @@ export default class Spa_shell {
 		$container.html(this.configMap.main_html);
 		this._setJqueryMap();
 
-		this.stateMap.is_chat_retracted = true;
-		
 		//configure uriAnchor to use our schema
 		$.uriAnchor.configModule({
 			schema_map: this.configMap.anchor_schema_map
@@ -90,14 +81,9 @@ export default class Spa_shell {
 
 		//finally initialize the event handler [!!!important: should not handle until chat module is initialized]
 		$(window)
+			.bind('resize', this, this._onResize)
 			.bind('hashchange', this, this._onHashchange)
 			.trigger('hashchange'); //open from bookmark, get the stored state from initial load
-
-		setTimeout(() => {
-			console.log('timeout');
-			$.uriAnchor.setAnchor({chat: 'opened'}, null, true);
-		}, 3000)
-		
 	}	
 
 	/**
@@ -191,7 +177,7 @@ export default class Spa_shell {
 
 		//revert anchor if slider change denied
 		if(!is_ok) {
-			if(anchor_map_previous.length) {
+			if(anchor_map_previous) {
 				$.uriAnchor.setAnchor(anchor_map_previous, null, true);
 				self.stateMap.anchor_map = anchor_map_previous;
 			} else {
@@ -201,6 +187,25 @@ export default class Spa_shell {
 		}
 
 		return false;
+	}
+	/**
+	 * [_onResize description]
+	 * @return {[Boolean]} [return true, so that jQuery doesn't preventDefault() or stopPropagation()]
+	 */
+	_onResize(event) {
+		let 
+			self = event.data;
+		if(self.stateMap.resize_idto) {
+			return true;
+		}
+
+		self.stateMap.spa_chat.handleResize();
+		//every 200 milliseconds during a resize, stateMap.resize_idto will be undefined, and the full onResize logic will run
+		self.stateMap.resize_idto = setTimeout(() => {
+			self.stateMap.resize_idto = undefined;
+		}, self.configMap.resize_interval);
+
+		return true;
 	}
 	/**
 	 * [_setChatAnchor callback method provided to Chat as a safe way to request a URI change]

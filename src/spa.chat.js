@@ -43,8 +43,10 @@ export default class Spa_chat {
 			},
 			slider_open_time: 250,
 			slider_close_time: 250,
-			slider_opened_em: 16,
+			slider_opened_em: 18,
 			slider_closed_em: 2,
+			slider_opened_min_em: 10,
+			window_height_min_em: 20,
 			slider_opened_title: 'Click to close',
 			slider_closed_title: 'Click to open',
 			chat_model: null,
@@ -182,6 +184,51 @@ export default class Spa_chat {
 		return true;
 	}
 	/**
+	 * [removeSlider 
+	 * 		* Removes chatSlider DOM element
+	 * 		* Reverts to intial state
+	 * 		* remove pointers to callbacks and other data ]
+	 * @return {[Boolean]} [description]
+	 */
+	removeSlider() {
+		if(this.jqueryMap.$slider) {
+			this.jqueryMap.$slider.remove(); //remove event bindings too
+			this.jqueryMap = {};
+		}
+
+		this.stateMap.$append_target = null;
+		this.stateMap.position_type = 'closed';
+
+		//unwind key configurations
+		this.configMap.chat_model = null;
+		this.configMap.people_model = null;
+		this.configMap.set_chat_anchor = null;
+
+		return true;
+	}
+	/**
+	 * [handleResize Given a window resize event, adjust the presentation]
+	 * @return {[Boolean]} [
+	 *         * true - resize considered
+	 *         * false - resize not considered
+	 * ]
+	 * Actions:
+	 * 		if the window height or width falls below a given threshold, resize the chat slider for the reduced window size
+	 */
+	handleResize() {
+		if(! this.jqueryMap.$slider) {
+			return false;
+		}
+
+		this._setPxSizes();
+		if(this.stateMap.position_type === 'opened') {
+			this.jqueryMap.$slider.css({
+				height: this.stateMap.slider_opened_px
+			});
+		}
+		return true;
+	}
+	/**
 	 * [_getEmSize utility method, convert the em display unit to pixels, so we can use measurements in jQuery]
 	 * @param  {[type]} elem [description]
 	 * @return {[type]}      [description]
@@ -197,18 +244,28 @@ export default class Spa_chat {
 	_setPxSizes() {
 		let 
 			px_per_em, 
+			window_height_em,
 			opened_height_em;
 		px_per_em = this._getEmSize(this.jqueryMap.$slider.get(0));
-		opened_height_em = this.configMap.slider_opened_em;
+		//calculate window height in em unit
+		window_height_em = Math.floor(
+			($(window).height() / px_per_em) + 0.5
+		);
+		opened_height_em 
+			= window_height_em > this.configMap.window_height_min_em
+			? this.configMap.slider_opened_em
+			: this.configMap.slider_opened_min_em;
 
 		this.stateMap.px_per_em = px_per_em;
 
 		this.stateMap.slider_closed_px = this.configMap.slider_closed_em * px_per_em;
-		this.stateMap.slider_opened_px = this.configMap.slider_opened_em * px_per_em;
+		this.stateMap.slider_opened_px = opened_height_em * px_per_em;
 
+		
 		this.jqueryMap.$sizer.css({
 			height: (opened_height_em - 2) * px_per_em
 		});
+
 	}
 
 	_onClickToggle(event) {
