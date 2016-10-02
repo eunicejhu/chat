@@ -29,9 +29,6 @@ export default class Spa_shell {
 				<div class="spa-shell-chat"></div>
 				<div class="spa-shell-modal"></div>
 			 `,
-			 settable_map: {
-			 	spa_shell: true
-			 },
 			 chat_extend_time: 250,
 			 chat_retract_time: 300,
 			 chat_extend_height: 450,
@@ -59,15 +56,6 @@ export default class Spa_shell {
 		};
 	}
 
-	configModule(input_map) {
-		Spa_util.setConfigMap({
-			input_map: input_map,
-			settable_map: this.configMap.settable_map,
-			config_map: this.configMap
-		});
-		return true;
-	}
-
 	/**
 	 * [initModule public method]
 	 * @param  {[type]} $container [description]
@@ -77,6 +65,7 @@ export default class Spa_shell {
 		let 
 			spa_chat = new Spa_chat(),
 			spa_model = new Spa_model();
+		this.stateMap.spa_shell = this;
 		this.stateMap.spa_chat = spa_chat;
 		this.stateMap.spa_model = spa_model;
 		//load HTML and map jQuery collections
@@ -92,7 +81,7 @@ export default class Spa_shell {
 		});
 		//configure and initilize feature modules
 		this.stateMap.spa_chat.configModule({
-			spa_shell: this.configMap.spa_shell,
+			spa_shell: this.stateMap.spa_shell,
 			set_chat_anchor: this._setChatAnchor,
 			chat_model: this.stateMap.spa_model.chat,
 			people_model: this.stateMap.spa_model.people
@@ -103,6 +92,11 @@ export default class Spa_shell {
 		$(window)
 			.bind('hashchange', this, this._onHashchange)
 			.trigger('hashchange'); //open from bookmark, get the stored state from initial load
+
+		setTimeout(() => {
+			console.log('timeout');
+			$.uriAnchor.setAnchor({chat: 'opened'}, null, true);
+		}, 3000)
 		
 	}	
 
@@ -162,7 +156,7 @@ export default class Spa_shell {
 			_s_chat_proposed,
 			s_chat_proposed,
 			anchor_map_proposed,
-			is_ok,
+			is_ok = true,
 			anchor_map_previous = self._copyAnchorMap();
 
 		//attempt to parse anchor, if the proposed anchor change is invalide, resets the anchor back to its prior value
@@ -182,7 +176,7 @@ export default class Spa_shell {
 		if(! anchor_map_previous || _s_chat_previous !== _s_chat_proposed) {
 			s_chat_proposed = anchor_map_proposed.chat;
 			switch(s_chat_proposed) {
-				case 'open':
+				case 'opened':
 					is_ok = self.stateMap.spa_chat.setSliderPosition('opened');
 					break;
 				case 'closed':
@@ -197,7 +191,7 @@ export default class Spa_shell {
 
 		//revert anchor if slider change denied
 		if(!is_ok) {
-			if(anchor_map_previous) {
+			if(anchor_map_previous.length) {
 				$.uriAnchor.setAnchor(anchor_map_previous, null, true);
 				self.stateMap.anchor_map = anchor_map_previous;
 			} else {
@@ -217,7 +211,6 @@ export default class Spa_shell {
 	 * 		* false - not updated
 	 */
 	_setChatAnchor(callee, position_type) {
-		console.log("callee: ", callee);
 		return callee._changeAnchorPart({chat: position_type});
 	}
 }

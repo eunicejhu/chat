@@ -216,9 +216,9 @@ export default class Spa_chat {
 			self = event.data,
 			set_chat_anchor = self.configMap.set_chat_anchor;
 		if(self.stateMap.position_type === 'opened') {
-			// set_chat_anchor(self.configMap.spa_shell, 'closed');
+			set_chat_anchor(self.configMap.spa_shell, 'closed');
 		} else if(self.stateMap.position_type === 'closed') {
-			// set_chat_anchor(self.configMap.spa_shell,'opened');
+			set_chat_anchor(self.configMap.spa_shell,'opened');
 		}
 		return false;
 	}
