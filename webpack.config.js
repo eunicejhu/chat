@@ -29,7 +29,8 @@ module.exports = {
 	jshint: {
 		varstmt: true,
 		unused: true,
-		esversion: 6
+		esversion: 6,
+		browser: true
 	},
 	// eslint: {
 	// 	configFile: './.eslintrc.json'

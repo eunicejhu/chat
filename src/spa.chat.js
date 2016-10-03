@@ -1,5 +1,5 @@
 import Spa_util from './spa.util';
-require("../styles/sass/spa.chat.scss")
+require("../styles/sass/spa.chat.scss");
 
 /**
  *  * a function that provides capability to adjust the chat URI anchor parameter

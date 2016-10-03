@@ -13,11 +13,13 @@ packages=(
 		style-loader
 		jshint-loader
 		jshint
-		
+		jquery.urianchor
 	)
 
 ToDoPackages=(
-		jquery.urianchor
+		jquery-touch-events
+		jquery.event.gevent
+		taffydb #jquery database plugin
 	)
 to_uninstall_packages=(
 		
