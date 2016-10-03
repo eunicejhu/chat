@@ -8,10 +8,30 @@ require("jquery.event.gevent");
 class Spa {
 	initModule($container) {
 		let 
+			$t, currentUser, peopleDb,
+			//--------
 			spa_model = new Spa_model(),
 			spa_shell = new Spa_shell();
 		spa_model.initModule();
 		spa_shell.initModule($container);
+
+		// testing sign-in and sign-out using the Javascript console
+		$t = $('<div/>');
+		$.gevent.subscribe($t, 'spa-login', () => {
+			console.log('Hello !', arguments);
+		});
+		$.gevent.subscribe($t, 'spa-logout', () => {
+			console.log('Goodbye !', arguments);
+		});
+
+		currentUser = spa_model.people.get_user();
+		console.log('get is anon ', currentUser.get_is_anon(currentUser));
+		peopleDb = spa_model.people.get_db();
+		peopleDb().each((person, idx) => {
+			console.log("person name: ", person.name);
+		})
+		
+
 	}
 }
 

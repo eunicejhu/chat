@@ -40,8 +40,12 @@ export default class Spa_model {
 		this.isFakeData = true;
 
 		this.personProto = {
-			get_is_user: () => {return this.cid === this.stateMap.user.cid},
-			get_is_anon: () => {return this.cid === this.stateMap.anon_user.cid}
+			get_is_user: (contextUser) => {
+				return contextUser.cid === this.stateMap.user.cid
+			},
+			get_is_anon: (contextUser) => {
+				return contextUser.cid === this.stateMap.anon_user.cid;
+			}
 		};
 
 		this.people = {
@@ -98,7 +102,7 @@ export default class Spa_model {
 			spa_fake = new Spa_fake();
 			this.stateMap.spa_fake = spa_fake;
 			people_list = spa_fake.getPeopleList();
-			people_list.forEach((person_map, i) => {
+			people_list.forEach((person_map) => {
 				this._makePerson({
 					cid: person_map._id,
 					css_map: person_map.css_map,
