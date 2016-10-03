@@ -15,7 +15,10 @@ export default class Spa_shell {
 			resize_interval: 200,
 			main_html: `
 			 	<div class="spa-shell-head">
-					<div class="spa-shell-head-logo"></div>
+					<div class="spa-shell-head-logo">
+						<h1>Chat </h1>
+						<p>A Single Page Application</p>
+					</div>
 					<div class="spa-shell-head-acct"></div>
 					<div class="spa-shell-head-search"></div>
 				</div>
@@ -29,6 +32,8 @@ export default class Spa_shell {
 		};
 		this.stateMap = {
 			$container: null,
+			$acct: null,
+			$nav: null,
 			spa_shell: null,
 			spa_chat: null,
 			spa_model: null,
@@ -44,7 +49,9 @@ export default class Spa_shell {
 	_setJqueryMap() {
 		let $container = this.stateMap.$container;
 		this.jqueryMap = {
-			$container: $container
+			$container: $container,
+			$acct: $container.find('.spa-shell-head-acct'),
+			$nav: $container.find('.spa-shell-main-nav')
 		};
 	}
 
@@ -77,12 +84,19 @@ export default class Spa_shell {
 			people_model: this.stateMap.spa_model.people
 		});
 		this.stateMap.spa_chat.initModule(this.jqueryMap.$container);
+		this.stateMap.spa_model.initModule();
 
 		//finally initialize the event handler [!!!important: should not handle until chat module is initialized]
 		$(window)
 			.bind('resize', this, this._onResize)
 			.bind('hashchange', this, this._onHashchange)
 			.trigger('hashchange'); //open from bookmark, get the stored state from initial load
+		$.gevent.subscribe($container, 'spa-login', this._onLogin.bind(this));//change callback context, using bind
+		$.gevent.subscribe($container, 'spa-logout', this._onLogout.bind(this));
+
+		this.jqueryMap.$acct
+			.text('Please sign-in')
+			.bind('click', this, this._onTapAccount); //!!!utap does not work
 	}	
 
 	/**
@@ -216,5 +230,30 @@ export default class Spa_shell {
 	 */
 	_setChatAnchor(callee, position_type) {
 		return callee._changeAnchorPart({chat: position_type});
+	}
+
+	_onTapAccount(event) {
+		let 
+			context = event.data,
+			acct_text,
+			user_name,
+			user = context.stateMap.spa_model.people.get_user();
+		if(user.get_is_anon(user)) {
+			user_name = prompt('Please sign-in');
+			context.stateMap.spa_model.people.login(user_name);
+			context.jqueryMap.$acct.text('...processing...');
+		} else {
+			context.stateMap.spa_model.people.logout();
+		}
+
+		return false;
+	}
+
+	_onLogin(event, login_user) {
+		this.jqueryMap.$acct.text(login_user.name);
+	}
+
+	_onLogout(event, logout_user) {
+		this.jqueryMap.$acct.text('Please sign-in');
 	}
 }

@@ -26,3 +26,20 @@ console.log("name : ", person.name);
 //check our person_cid_map too
 personCidMap = spa_model.people.get_cid_map();
 console.log("a0 name: ", personCidMap['a0'].name);
+
+//-----------
+currentUser = spa_model.people.get_user();
+// console.log('get is anon ', currentUser.get_is_anon(currentUser));
+peopleDb = spa_model.people.get_db();
+peopleDb().each((person) => {
+	// console.log("person name: ", person.name);
+});
+
+spa_model.people.logout();
+peopleDb().each((person) => {
+	// console.log("After logout: person name: ", person.name);
+});
+
+currentUser = spa_model.people.get_user();
+// console.log('After logout get is anon ', currentUser.get_is_anon(currentUser));
+// -----------

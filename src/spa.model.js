@@ -52,7 +52,7 @@ export default class Spa_model {
 			get_by_cid: (cid) => {return this.stateMap.people_cid_map[cid];},
 			get_db: () => {return this.stateMap.people_db;},
 			get_user: () => {return this.stateMap.user;},
-			login: () => {
+			login: (name) => {
 				let 
 					sio = this.isFakeData ? this.stateMap.spa_fake.mockSio : this.stateMap.spa_data.getSio();
 				this.stateMap.user = this._makePerson({
@@ -65,12 +65,12 @@ export default class Spa_model {
 					name: name
 				});
 
-				sio.on('userupdate', this._completeLogin);
+				sio.on('userupdate', this._completeLogin.bind(this));
 				//send an adduser message to the backend along with the user details
 				sio.emit('adduser', {
 					cid: this.stateMap.user.cid,
 					css_map: this.stateMap.user.css_map,
-					name: sthis.stateMap.user.name
+					name: this.stateMap.user.name
 				});
 			},
 			logout: () => {
