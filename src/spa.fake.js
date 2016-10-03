@@ -1,4 +1,12 @@
 export default class Spa_fake {
+	constructor() {
+		this.fakeIdSerial = 5;
+	}
+
+	_makeFakeId() {
+		return 'id_' + String(this.fakeIdSerial++);
+	}
+
 	getPeopleList() {
 		return [
 			{
@@ -38,5 +46,33 @@ export default class Spa_fake {
 				}
 			}
 		];
+	}
+
+	mockSio() {
+		let 
+			on_sio,
+			emit_sio,
+			callback_map = {};
+		on_sio = (msg_type, callback) => {
+			callback_map[msg_type] = callback;
+		}
+		emit_sio = (msg_type, data) => {
+			if(msg_type === 'adduser' && callback_map.userupdate) {
+				setTimeout(() => {
+					callback_map.userupdate([
+						{
+							_id: this._makeFakeId(),
+							name: data.name,
+							css_map: data.css_map
+						}
+					]);
+				}, 3000);
+			}
+		}
+
+		return {
+			emit: emit_sio,
+			on: on_sio
+		}
 	}
 }
