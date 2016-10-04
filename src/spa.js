@@ -44,6 +44,7 @@ class Spa {
 		spa_model.chat.set_chatee('id_03');
 		spa_model.chat.send_msg('Hi Pebbles!');
 		spa_model.chat.send_msg('what is up, tricks?');
+		spa_model.chat.join();
 
 		spa_model.chat.update_avatar({
 			person_id: 'id_03',

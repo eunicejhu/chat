@@ -74,57 +74,97 @@ $yellow: #ff0;
 	right: 0;
 }
 
-.spa-chat-msgs {
+.spa-chat-list {
 	position: absolute;
-	top: 1em;
-	left: 1em;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	width: 10em;
+}
+
+.spa-chat-msg {
+	position: absolute;
+	top: 0;
+	left: 10em;
+	right: 0;
+	bottom: 0;
+}
+
+.spa-chat-msg-log-msg {
+	left: 0em;
 	right: 1em;
 	bottom: 4em;
 	padding: 0.5em;
 	border: thin solid $gray;
-	overflow-x: hidden;
 	overflow-y: scroll;
 }
 
-.spa-chat-box {
-	position: absolute;
-	height: 2em;
+.spa-chat-msg-log-me {
+	font-weight: 800;
+	color: #484;
+}
 
+.spa-chat-msg-log-alert {
+	font-style: italic;
+	background: #a88;
+	color: #fff;
+}
+
+.spa-chat-list-box {
 	left: 1em;
 	right: 1em;
 	bottom: 1em;
-	border: thin solid $gray;
+
+	overflow-y: auto;
+	border-width: thin 0 thin thin;
+	border-style: solid;
+	border-color: $gray;
 	background-color: $gray;
+	color: $lightGray;
+	border-radius: 0.5em 0 0 0;
+}
 
-	input[type=text] {
-		float: left;
-		width: 75%;
-		height: 100%;
-		padding: 0.5em;
-		border: 0;
-		background-color: $lightGray;
-		color: $black;
+.spa-chat-list-name {
+	cursor: pointer;
 
-		&:focus {
-			background-color: $white;
-		}
+	&:hover {
+		background-color: #aaa;
+		color: #444;
+	};
+}
+
+.spa-chat-msg-in input[type=text] {
+	position: absolute;
+	width: 75%;
+	height: 100%;
+	line-height: 100%;
+	padding: 0 0.5em;
+	border: 0;
+	background-color: $lightGray;
+	color: #666;
+
+	&:focus {
+		background-color: #ff8;
+		color: #222;
 	}
+}
 
-	div {
-		float: left;
-		width: 25%;
-		height: 2em;
-		line-height: 1.9em;
-		text-align: center;
-		color: $white;
-		font-weight: 800;
-		cursor: pointer;
-
-		&:hover {
-			background-color: $darkGray;
-			color: $yellow;
-		}
-	}	
+.spa-chat-msg-send {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 25%;
+	height: 100%;
+	line-height: 1.9em;
+	text-align: center;
+	color: $white;
+	font-weight: 800;
+	cursor: pointer;
+}
+.spa-chat-msg-send:hover,
+.spa-chat-msg-send.spa-x-select {
+	background-color: #444;
+	color: #ff0;
 }
 
 .spa-chat-head:hover

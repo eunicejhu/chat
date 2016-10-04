@@ -7,6 +7,15 @@ body {
 	background-color: #777;
 }
 
+input, textarea, .spa-x-user-select {
+	-webkit-user-select: text;
+	-khtml-user-select: text;
+	-moz-user-select: text;
+	-o-user-select: text;
+	-mx-user-select: text;
+	user-select: text;
+}
+
 #spa {
 	position: absolute;
 	top: 0;

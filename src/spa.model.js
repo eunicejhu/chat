@@ -117,16 +117,14 @@ export default class Spa_model {
 			},
 			logout: () => {
 				let 
-					is_removed,
 					user = this.stateMap.user;
 
 				//a user will automatically exit the chat room once sign-out is complete
 				this.chat.leave();
-				is_removed = this._removePerson(user);
 				this.stateMap.user = this.stateMap.anon_user;
+				this._clearPeopleDb();
 
 				$.gevent.publish('spa-logout', [user]);
-				return is_removed;
 			}
 		};
 
@@ -143,7 +141,8 @@ export default class Spa_model {
 				leave_chat,
 				join_chat,
 				update_avatar,
-				chatee = null;
+				chatee = null,
+				person;
 			//to refresh the people object when a new people list is received
 			_update_list = (arg_list) => {
 				let 
@@ -172,11 +171,12 @@ export default class Spa_model {
 							name: person_map.name
 						};
 
+						person = this._makePerson(make_person_map);
+
 						if(chatee && chatee.id === make_person_map.id) {
 							is_chatee_online = true;
+							chatee = person;
 						}
-
-						this._makePerson(make_person_map);
 					}
 				}
 				this.stateMap.people_db.sort("name");
@@ -308,6 +308,7 @@ export default class Spa_model {
 					sio = this.isFakeData ? this.stateMap.spa_fake.mockSio : this.stateMap.spa_data.getSio();
 				if(sio) {
 					sio.emit('updateavatar', avatar_update_map);
+					console.log();
 				}
 			};
 
