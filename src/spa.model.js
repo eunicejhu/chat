@@ -21,6 +21,39 @@ import {taffy as TAFFY} from 'taffydb';
  * 		* logout() - revert the current user object to anonymous.
  * 			The method publishes a 'spa-logout' global custom event.
  */
+
+/**
+ * The chat object API
+ * public functions:
+ * 		* join() - sets up the chat protocal with backend 
+ * 			including publisers for "spa-listchange" and "spa-updateChat" global custom events.
+ * 		* get_chatee(person_id) - 
+ * 			if the person_id does not exist in the people list, the chatee is set to null
+ * 		 	if the person requested is already the chatee, it returns false
+ * 		  	it publishes a "spa-setchatee" global custom event.
+ * 		* send_msg(msg_text) - send a message to the chatee.
+ * 			it publishes a "spa-udpatechat" global cutom event.
+ * 			if the user is anonymous or the chatee is null, it aborts and returns false
+ * 		* update_avatar(update_avtr_map) - send the update_avtr_map to the backend.
+ * 			this results in an "spa-listchange" event 
+ * 			which publishes the updated people list and avatar information 
+ * 			(the css_map in the person objects).
+ * 			THe update_avtr_map must have the form {person_id: person_id, css_map: css_map}
+ * global custom events:
+ * 		*spa-setchatee
+ * 			{
+ * 				old_chatee: old_chatee_person_object,
+ * 				new_chatee: new_chatee_person_object
+ * 			}
+ * 		*spa-listchange
+ * 		*spa-updatechat:  this is published when a new message is received or sent.
+ * 			{
+ * 				dest_id: chatee_id,
+ * 				dest_name: chatee_name,
+ * 				sender_id: sender_id,
+ * 				msg_text: message_content
+ * 			}
+ */
 export default class Spa_model {
 	constructor() {
 		this.configMap = {
@@ -34,7 +67,8 @@ export default class Spa_model {
 			cid_serial: 0,  // to store a serial number used to create this ID
 			people_cid_map: {},
 			people_db: TAFFY(),
-			user: null
+			user: null,
+			is_connected: false // indicate if the user is currently in the chat room
 		};
 
 		this.isFakeData = true;
@@ -48,6 +82,7 @@ export default class Spa_model {
 			}
 		};
 
+		//The people API
 		this.people = {
 			get_by_cid: (cid) => {return this.stateMap.people_cid_map[cid];},
 			get_db: () => {return this.stateMap.people_db;},
@@ -84,6 +119,86 @@ export default class Spa_model {
 				return is_removed;
 			}
 		};
+
+		//The chat API
+		//since we don't expose all the functions, i use IIFF to keep private methods not exposed
+		this.chat =  (() => {
+			let 
+				_publish_listchange,
+				_update_list,
+				leave_chat,
+				join_chat;
+			//to refresh the people object when a new people list is received
+			_update_list = (arg_list) => {
+				let 
+					person_map,
+					make_person_map,
+					people_list = arg_list[0];
+				this;_clearPeopleDb();
+
+				for(person_map in people_list) {
+					if(people_list.hasOwnProperty(person_map)) {
+						if(!person_map.name) {
+							return true; // used to skip one iteration
+						} 
+
+						//if user defined, update css_map and skip remainder
+						if(this.stateMap.user && this.stateMap.user.id === person_map._id) {
+							this.stateMap.user.css_map = person_map.css_map; 
+							return true;
+						}
+
+						make_person_map = {
+							cid: person_map._id,
+							css_map: person_map.css_map,
+							id: person_map._id,
+							name: person_map.name
+						};
+
+						this._makePerson(make_person_map);
+					}
+				}
+				this.stateMap.people_db.sort("name");
+			};
+
+			_publish_listchange = (arg_list) => {
+				_update_list(arg_list);
+				$.gevent.publish('spa-listchange', [arg_list]);
+			};
+
+			leave_chat = () => {
+				let 
+					sio = this.isFakeData ? this.stateMap.spa_fake.makeSio : this.stateMap.spa_data.getSio();
+				this.stateMap.is_connected = false;
+				if(sio) {
+					sio.emit('leavechat');
+				}
+			};
+
+			join_chat = () => {
+				let 
+					sio;
+				//check if the user has already joined
+				if(this.stateMap.is_connected) {
+					return false;
+				}
+
+				if(this.stateMap.user.get_is_anon()) {
+					console.warn('User must be defined before joining chat');
+					return false;
+				}
+
+				sio = this.isFakeData ? this.stateMap.spa_fake.mockSio : this.stateMap.spa_data.getSio();
+				sio.on('listchange', this._publish_listchange);
+				this.stateMap.is_connected = true;
+				return true;
+			};
+
+			return {
+				leave: leave_chat,
+				join: join_chat
+			};
+		})();
 	}
 
 	initModule() {
@@ -153,7 +268,28 @@ export default class Spa_model {
 		$.gevent.publish('spa-login', [this.stateMap.user]);
 
 	}
-
+	/**
+	 * [_makePerson convert a person of Person Object to DB person,
+	 * 		and insert the DB person to Spa_data or Spa_fake, 
+	 * 			(this.stateMap.people_db.insert(person);)
+	 * 		add this newly created person instance into people_cid_map of Spa_model 
+	 * 			(this.stateMap.people_cid_map[cid] = person;)
+	 * 		DB person (fields): 
+	 * 			[
+	 * 				name,
+	 * 				_id,
+	 * 				css_map
+	 * 			]
+	 * 		person in Model:
+	 * 			{
+	 * 				cid: DB_person._id,
+	 * 				id: DB_person._id,
+	 * 				name: DB_person.name,
+	 * 				css_map: DB_person.css_map
+	 * 			}]
+	 * @param  {[type]} person_map [description]
+	 * @return {[type]}            [description]
+	 */
 	_makePerson(person_map) {
 		let 
 			person,
