@@ -78,7 +78,7 @@ export default class Spa_fake {
 
 				//respond to 'updatechat' event with an 'updatechat'
 				//callback after a 2s delay, Echo back user info
-				if(msg_type === "udpatechat" && _callback_map.updatechat) {
+				if(msg_type === "updatechat" && _callback_map.updatechat) {
 					setTimeout(() => {
 						let
 							user = this.stateMap.people.get_user();
@@ -102,6 +102,21 @@ export default class Spa_fake {
 					}
 
 					_send_listchange();
+				}
+
+				//create a handler for receipt of an updateavatar message.
+				if(msg_type === 'updateavatar' && _callback_map.listchange) {
+					//stimuate receipt of 'listchange' message
+					this.peopleList.forEach((person_map) => {
+						console.log("check item;", person_map._id);
+						if(person_map._id === data.person_id) {
+							person_map.css_map = data.css_map;
+							return false; //jump out of the iteration completely
+						}
+
+						//execute callback for the 'listchange' message
+						_callback_map.listchange([this.peopleList]);
+					})
 				}
 			};
 

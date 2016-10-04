@@ -316,7 +316,8 @@ export default class Spa_model {
 				join: join_chat,
 				get_chatee: get_chatee,
 				send_msg: send_msg,
-				set_chatee: set_chatee
+				set_chatee: set_chatee,
+				update_avatar: update_avatar
 			};
 		})();
 	}
