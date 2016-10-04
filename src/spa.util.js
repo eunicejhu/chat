@@ -26,6 +26,24 @@ export default class Spa_util {
 			}
 		}
 	}
+
+	static setStateMap(arg_map) {
+		let 
+			input_map = arg_map.input_map,
+			settable_map = arg_map.settable_map,
+			state_map = arg_map.state_map,
+			key_name, error;
+		for(key_name in input_map) {
+			if(input_map.hasOwnProperty(key_name)) {
+				if(settable_map.hasOwnProperty(key_name)) {
+					state_map[key_name] = input_map[key_name];
+				} else {
+					error = this.makeError('Bad Input', `Setting state key | ${key_name} | is not supported`);
+					throw error;
+				}
+			}
+		}
+	}
 	/**
 	 * [makeError a convenience wrapper to create an error object]
 	 * @param  {[type]} name_text [the error name]

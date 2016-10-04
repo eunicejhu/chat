@@ -1,3 +1,4 @@
+import Spa_util from "./spa.util";
 export default class Spa_fake {
 	constructor() {
 		this.peopleList = [
@@ -38,17 +39,26 @@ export default class Spa_fake {
 				}
 			}
 		];
+		this.configMap = {
+			settable_map: {
+				spa_model: true
+			}
+		};
+		this.stateMap = {
+			spa_model: null
+		}
 		this.fakeIdSerial = 5;
 		this.mockSio = (() => {
 			let 
 				on_sio,
 				emit_sio,
+				_emit_mock_msg,
 				_send_listchange,
 				_listchange_idto,
 				_callback_map = {};
 			on_sio = (msg_type, callback) => {
 				_callback_map[msg_type] = callback;
-			}
+			};
 			emit_sio = (msg_type, data) => {
 				let 
 					person_map;
@@ -65,26 +75,89 @@ export default class Spa_fake {
 						_callback_map.userupdate([person_map]);
 					}, 3000);
 				}
+
+				//respond to 'updatechat' event with an 'updatechat'
+				//callback after a 2s delay, Echo back user info
+				if(msg_type === "udpatechat" && _callback_map.updatechat) {
+					setTimeout(() => {
+						let
+							user = this.stateMap.people.get_user();
+						_callback_map.updatechat([{
+							dest_id: user.id,
+							dest_name: user.name,
+							sender_id: data.dest_id,
+							msg_text: `Thanks for the note, ${user.name}`
+						}]);
+					}, 2000);
+				}
+
+				if(msg_type === 'leavechat') {
+					//reset login status
+					delete _callback_map.listchange;
+					delete _callback_map.updatechat;
+
+					if(_listchange_idto) {
+						clearTimeout(_listchange_idto);
+						_listchange_idto = undefined;
+					}
+
+					_send_listchange();
+				}
+			};
+
+			// try send a mock message to the signed-in user once every 8 seconds. 
+			// This will succeed only after a user is signed in when the updatechat callback is set.
+			// On success, the routine does not call itself again 
+			// and therefore no further attempts to send a mock message will be made
+			_emit_mock_msg = () => {
+				setTimeout(() => {
+					let 
+						user;
+					user =  this.stateMap.spa_model.people.get_user();
+					if(_callback_map.updatechat) {
+						_callback_map.updatechat([{
+							dest_id: user.id,
+							dest_name: user.name,
+							sender_id: 'id_04',
+							msg_text: `Hi there ${user.name}! Wilma here.` 
+						}]);
+					} else {
+						_emit_mock_msg();
+					}
+				}, 8000);
 			}
 			// try once per second to use listchange callback
 			// stop trying after first success
 			_send_listchange = () => {
 				_listchange_idto = setTimeout(() => {
 					if(_callback_map.listchange) {
-						_callback_map.listchange([peopleList]);
+						_callback_map.listchange([this.peopleList]);
+						// trying to send a mock message after the user signs in
+						_emit_mock_msg();
 						_listchange_idto = undefined;
 					} else {
 						_send_listchange();
 					}
 				}, 1000);
-			}
+			};
+
 			//start the process...
-			_send_listchange();
+			// _send_listchange();
+
 			return {
 				emit: emit_sio,
 				on: on_sio
 			}
 		})();
+	}
+
+	configModule(input_map) {
+		Spa_util.setStateMap({
+			input_map: input_map,
+			settable_map: this.configMap.settable_map,
+			state_map: this.stateMap
+		});
+		return true;
 	}
 
 	_makeFakeId() {

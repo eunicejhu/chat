@@ -67,6 +67,7 @@ export default class Spa_model {
 		};
 
 		this.stateMap = {
+			spa_model: null,
 			spa_data: null,
 			spa_fake: null,
 			anon_user: null,
@@ -210,6 +211,7 @@ export default class Spa_model {
 				let
 					msg_map,
 					sio = this.isFakeData ? this.stateMap.spa_fake.mockSio : this.stateMap.spa_data.getSio();
+				console.log("hello, send_msg");
 				if(! sio) {
 					return false;
 				}
@@ -307,9 +309,11 @@ export default class Spa_model {
 			name: 'anonymous'
 		});
 		this.stateMap.user = this.stateMap.anon_user;
+		this.stateMap.spa_model = this;
 
 		if(this.isFakeData) {
 			spa_fake = new Spa_fake();
+			spa_fake.configModule({spa_model: this.stateMap.spa_model});
 			this.stateMap.spa_fake = spa_fake;
 			people_list = spa_fake.getPeopleList();
 			people_list.forEach((person_map) => {
