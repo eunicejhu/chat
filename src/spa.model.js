@@ -142,6 +142,7 @@ export default class Spa_model {
 				set_chatee,
 				leave_chat,
 				join_chat,
+				update_avatar,
 				chatee = null;
 			//to refresh the people object when a new people list is received
 			_update_list = (arg_list) => {
@@ -286,6 +287,28 @@ export default class Spa_model {
 				sio.on('updatechat', _publish_updatechat);
 				this.stateMap.is_connected = true;
 				return true;
+			};
+
+			/**
+			 * [description]
+			 * @param  {[type]} avatar_update_map [
+			 *       {
+			 *       	person_id: <string>,
+			 *       	css_map: {
+			 *       		top: <int>,
+			 *       		left: <int>,
+			 *       		'background-color': <string>
+			 *       	}
+			 *       }
+			 * ]
+			 * @return {[type]}  [description]
+			 */
+			update_avatar = (avatar_update_map) => {
+				let
+					sio = this.isFakeData ? this.stateMap.spa_fake.mockSio : this.stateMap.spa_data.getSio();
+				if(sio) {
+					sio.emit('updateavatar', avatar_update_map);
+				}
 			};
 
 			return {
