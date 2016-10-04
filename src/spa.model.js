@@ -27,10 +27,13 @@ import {taffy as TAFFY} from 'taffydb';
  * public functions:
  * 		* join() - sets up the chat protocal with backend 
  * 			including publisers for "spa-listchange" and "spa-updateChat" global custom events.
- * 		* get_chatee(person_id) - 
+ * 		* set_chatee(person_id) - 
  * 			if the person_id does not exist in the people list, the chatee is set to null
  * 		 	if the person requested is already the chatee, it returns false
  * 		  	it publishes a "spa-setchatee" global custom event.
+ * 		* get_chatee() 
+ * 			return the person object with who the user is chatting with. 
+ * 			if there is no chatee, null is returned.
  * 		* send_msg(msg_text) - send a message to the chatee.
  * 			it publishes a "spa-udpatechat" global cutom event.
  * 			if the user is anonymous or the chatee is null, it aborts and returns false
@@ -41,12 +44,15 @@ import {taffy as TAFFY} from 'taffydb';
  * 			THe update_avtr_map must have the form {person_id: person_id, css_map: css_map}
  * global custom events:
  * 		*spa-setchatee
+ * 			A map as below is provided as data
  * 			{
  * 				old_chatee: old_chatee_person_object,
  * 				new_chatee: new_chatee_person_object
  * 			}
  * 		*spa-listchange
- * 		*spa-updatechat:  this is published when a new message is received or sent.
+ * 		*spa-updatechat:  
+ * 			this is published when a new message is received or sent.
+ * 			if received or sent, A map of the below form is provided as data.
  * 			{
  * 				dest_id: chatee_id,
  * 				dest_name: chatee_name,
@@ -112,6 +118,9 @@ export default class Spa_model {
 				let 
 					is_removed,
 					user = this.stateMap.user;
+
+				//a user will automatically exit the chat room once sign-out is complete
+				this.chat.leave();
 				is_removed = this._removePerson(user);
 				this.stateMap.user = this.stateMap.anon_user;
 
@@ -125,16 +134,22 @@ export default class Spa_model {
 		this.chat =  (() => {
 			let 
 				_publish_listchange,
+				_publish_updatechat,
 				_update_list,
+				get_chatee,
+				send_msg,
+				set_chatee,
 				leave_chat,
-				join_chat;
+				join_chat,
+				chatee = null;
 			//to refresh the people object when a new people list is received
 			_update_list = (arg_list) => {
 				let 
 					person_map,
 					make_person_map,
-					people_list = arg_list[0];
-				this;_clearPeopleDb();
+					people_list = arg_list[0],
+					is_chatee_online = false;
+				this._clearPeopleDb();
 
 				for(person_map in people_list) {
 					if(people_list.hasOwnProperty(person_map)) {
@@ -155,10 +170,19 @@ export default class Spa_model {
 							name: person_map.name
 						};
 
+						if(chatee && chatee.id === make_person_map.id) {
+							is_chatee_online = true;
+						}
+
 						this._makePerson(make_person_map);
 					}
 				}
 				this.stateMap.people_db.sort("name");
+				//if chatee is no longer online, we unset the chatee
+				//which triggers the 'spa-setchatee' global event
+				if(chatee && ! is_chatee_online) {
+					set_chatee('');
+				}
 			};
 
 			_publish_listchange = (arg_list) => {
@@ -166,9 +190,74 @@ export default class Spa_model {
 				$.gevent.publish('spa-listchange', [arg_list]);
 			};
 
+			_publish_updatechat = (arg_list) => {
+				let 
+					msg_map = arg_list[0];
+				if(!chatee) {
+					set_chatee(msg_map.sender_id);
+				} else if(msg_map.sender_id !== this.stateMap.user.id && msg_map.sender_id !== chatee.id) {
+					set_chatee(msg_map.sender_id);
+				}
+
+				$.gevent.publish('spa-updatechat', [msg_map]);
+			};
+
+			get_chatee = () => {
+				return chatee;
+			};
+
+			send_msg = (msg_text) => {
+				let
+					msg_map,
+					sio = this.isFakeData ? this.stateMap.spa_fake.mockSio : this.stateMap.spa_data.getSio();
+				if(! sio) {
+					return false;
+				}
+				if(!(this.stateMap.user && chatee)) {
+					return false;
+				}
+
+				msg_map = {
+					dest_id: chatee.id,
+					dest_name: chatee.name,
+					sender_id: this.stateMap.user.id,
+					msg_text: msg_text
+				}
+				//we published updatechat so we can show our outgoing messages
+				_publish_updatechat([msg_map]);
+				//??
+				sio.emit('udpate', msg_map);
+				return true;
+
+			};
+
+			set_chatee = (person_id) => {
+				let 
+					new_chatee;
+				new_chatee = this.stateMap.people_cid_map[person_id];
+				if(new_chatee) {
+					//if the provided chatee is the same as the current one, it does nothing and returns false
+					if(chatee && chatee.id === new_chatee.id) {
+						return false;
+					}
+					//what if chatee does not exit??
+				} else {
+					new_chatee = null;
+				}
+
+				$.gevent.publish('spa-setchatee', {
+					old_chatee: chatee,
+					new_chatee: new_chatee
+				});
+
+				chatee = new_chatee;
+				return true;
+			}
+
 			leave_chat = () => {
 				let 
 					sio = this.isFakeData ? this.stateMap.spa_fake.makeSio : this.stateMap.spa_data.getSio();
+				chatee = null;
 				this.stateMap.is_connected = false;
 				if(sio) {
 					sio.emit('leavechat');
@@ -183,20 +272,26 @@ export default class Spa_model {
 					return false;
 				}
 
-				if(this.stateMap.user.get_is_anon()) {
+				if(this.stateMap.user.get_is_anon(this.stateMap.user)) {
 					console.warn('User must be defined before joining chat');
 					return false;
 				}
 
 				sio = this.isFakeData ? this.stateMap.spa_fake.mockSio : this.stateMap.spa_data.getSio();
-				sio.on('listchange', this._publish_listchange);
+				sio.on('listchange', _publish_listchange);
+				//bind _publish_updatechat to handle 'updatechat' messages received from the backend.
+				//As a result, an 'spa-updatechat' event is published whenever a message is received.
+				sio.on('updatechat', _publish_updatechat);
 				this.stateMap.is_connected = true;
 				return true;
 			};
 
 			return {
 				leave: leave_chat,
-				join: join_chat
+				join: join_chat,
+				get_chatee: get_chatee,
+				send_msg: send_msg,
+				set_chatee: set_chatee
 			};
 		})();
 	}
@@ -264,6 +359,8 @@ export default class Spa_model {
 		this.stateMap.user.id = user_map._id;
 		this.stateMap.user.css_map = user_map.css_map;
 		this.stateMap.people_cid_map[user_map._id] = this.stateMap.user;
+		// a user will automatically join the chat room once sign-in is complete
+		this.chat.join();
 
 		$.gevent.publish('spa-login', [this.stateMap.user]);
 

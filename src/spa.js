@@ -9,6 +9,9 @@ class Spa {
 	initModule($container) {
 		let 
 			$t,
+			currentUser,
+			peopleDb,
+			//--------
 			spa_model = new Spa_model(),
 			spa_shell = new Spa_shell();
 		spa_model.initModule();
@@ -19,9 +22,31 @@ class Spa {
 		$.gevent.subscribe($t, 'spa-login', () => {
 			console.log('Hello !', arguments);
 		});
+		$.gevent.subscribe($t, 'spa-listchange', () => {
+			console.log("listchange: ", arguments);
+		});
 		$.gevent.subscribe($t, 'spa-logout', () => {
 			console.log('Goodbye !', arguments);
 		});
+
+		//confirm thisis not yet signed-in
+		currentUser = spa_model.stateMap.user;
+		console.log("get is anon: ", currentUser.get_is_anon(currentUser));
+
+		spa_model.chat.join();
+		spa_model.people.login("Fred");
+
+		peopleDb = spa_model.people.get_db();
+		peopleDb().each((person) => {
+			console.log("person from peopleDb: ", person.name);
+		});
+		
+		spa_model.chat.join();
+
+		peopleDb = spa_model.people.get_db();
+		peopleDb().each((person) => {
+			console.log("After Fred login, person from peopleDb: ", person.name);
+		})
 
 	}
 }
