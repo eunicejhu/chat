@@ -308,7 +308,6 @@ export default class Spa_model {
 					sio = this.isFakeData ? this.stateMap.spa_fake.mockSio : this.stateMap.spa_data.getSio();
 				if(sio) {
 					sio.emit('updateavatar', avatar_update_map);
-					console.log();
 				}
 			};
 

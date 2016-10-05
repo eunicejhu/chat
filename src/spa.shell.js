@@ -2,6 +2,7 @@ require("jquery.urianchor");
 require("../styles/sass/spa.shell.scss");
 import Spa_model from "./spa.model";
 import Spa_chat from "./spa.chat";
+import Spa_avtr from "./spa.avtr";
 
 export default class Spa_shell {
 	constructor() {
@@ -63,10 +64,12 @@ export default class Spa_shell {
 	initModule($container) {
 		let 
 			spa_chat = new Spa_chat(),
-			spa_model = new Spa_model();
+			spa_model = new Spa_model(),
+			spa_avtr = new Spa_avtr();
 		this.stateMap.spa_shell = this;
 		this.stateMap.spa_chat = spa_chat;
 		this.stateMap.spa_model = spa_model;
+		this.stateMap.spa_avtr = spa_avtr;
 		//load HTML and map jQuery collections
 		this.stateMap.$container = $container;
 		$container.html(this.configMap.main_html);
@@ -83,8 +86,14 @@ export default class Spa_shell {
 			chat_model: this.stateMap.spa_model.chat,
 			people_model: this.stateMap.spa_model.people
 		});
+		this.stateMap.spa_avtr.configModule({
+			chat_model: this.stateMap.spa_model.chat,
+			people_model: this.stateMap.spa_model.people
+		});
 		this.stateMap.spa_chat.initModule(this.jqueryMap.$container);
 		this.stateMap.spa_model.initModule();
+		this.stateMap.spa_avtr.initModule(this.jqueryMap.$nav);
+		
 
 		//finally initialize the event handler [!!!important: should not handle until chat module is initialized]
 		$(window)

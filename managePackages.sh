@@ -14,15 +14,15 @@ packages=(
 		jshint-loader
 		jshint
 		jquery.urianchor
-	)
-
-ToDoPackages=(
-		jquery-touch-events
 		jquery.event.gevent
 		taffydb #jquery database plugin
 	)
+
+ToDoPackages=(
+		jquery.event.ue
+	)
 to_uninstall_packages=(
-		
+		jquery-touch-events
 	)
 for package in "${ToDoPackages[@]}"
 do
