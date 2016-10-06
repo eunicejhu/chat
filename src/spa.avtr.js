@@ -50,6 +50,7 @@ export default class Spa_avtr {
 		this._setJqueryMap($container);
 
 		//bind model global events
+		$.gevent.subscribe($container, 'spa-login', this._onListchange.bind(this));
 		$.gevent.subscribe($container, 'spa-setchatee', this._onSetchatee.bind(this));
 		$.gevent.subscribe($container, 'spa-listchange', this._onListchange.bind(this));
 		$.gevent.subscribe($container, 'spa-logout', this._onLogout.bind(this));
@@ -91,7 +92,7 @@ export default class Spa_avtr {
 		};
 
 		person_id = $target.attr('data-id');
-		this.configMap.chat_model.updateAvatar({
+		this.configMap.chat_model.update_avatar({
 			person_id: person_id,
 			css_map: css_map
 		});
@@ -188,7 +189,7 @@ export default class Spa_avtr {
 	 */
 	_onSetchatee(event, arg_map) {
 		let 
-			$nav = $(this),
+			$nav = this.jqueryMap.$container,
 			new_chatee = arg_map.new_chatee,
 			old_chatee = arg_map.old_chatee;
 		//use this to hightlight avatar of user in nav area
@@ -216,7 +217,7 @@ export default class Spa_avtr {
 	 */
 	_onListchange(event) {
 		let
-			$nav = $(this),
+			$nav = this.jqueryMap.$container,
 			people_db = this.configMap.people_model.get_db(),
 			user = this.configMap.people_model.get_user(),
 			chatee = this.configMap.chat_model.get_chatee() || {},

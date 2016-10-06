@@ -40,19 +40,19 @@ class Spa {
 		// console.log("get is anon: ", currentUser.get_is_anon(currentUser));
 
 		// spa_model.chat.join();
-		spa_model.people.login("Fanny");
-		spa_model.chat.set_chatee('id_03');
+		// spa_model.people.login("Fanny");
+		// spa_model.chat.set_chatee('id_03');
 		// spa_model.chat.send_msg('Hi Pebbles!');
 		// spa_model.chat.send_msg('what is up, tricks?');
 		// spa_model.chat.join();
 
-		spa_model.chat.update_avatar({
-			person_id: 'id_03',
-			css_map: {}
-		});
+		// spa_model.chat.update_avatar({
+		// 	person_id: 'id_03',
+		// 	css_map: {}
+		// });
 
-		person = spa_model.people.get_by_cid("id_03");
-		console.log("person after change avatar : ", person);
+		// person = spa_model.people.get_by_cid("id_03");
+		// console.log("person after change avatar : ", person);
 
 
 		// peopleDb = spa_model.people.get_db();

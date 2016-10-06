@@ -16,13 +16,13 @@ packages=(
 		jquery.urianchor
 		jquery.event.gevent
 		taffydb #jquery database plugin
+		jquery.event.ue
 	)
 
 ToDoPackages=(
-		jquery.event.ue
+		
 	)
 to_uninstall_packages=(
-		jquery-touch-events
 	)
 for package in "${ToDoPackages[@]}"
 do
