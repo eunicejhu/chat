@@ -178,7 +178,7 @@ export default class Spa_avtr {
 		this.stateMap.drag_bg_color = undefined;
 		this.stateMap.$drag_target = null;
 		this.stateMap.drag_map = null;
-		this._updateAvatar();
+		this._updateAvatar($drag_target);
 	}
 	/**
 	 * [_onSetchatee This is invoked when the Model publishes an spa-setchatee event.
@@ -228,7 +228,7 @@ export default class Spa_avtr {
 			return false;
 		}
 
-		people_db().each((person) => {
+		(people_db().get()).forEach((person) => {
 			let 
 				class_list;
 			if(person.get_is_anon(person)) {

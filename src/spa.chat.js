@@ -364,9 +364,9 @@ export default class Spa_chat {
 
 	_onTapList(event) {
 		let
-			$tapped = $(event.elem_target),
+			$tapped = $(event.target),
 			chatee_id;
-		if(! $tapped.hasClass('spa-caht-list-name')) {
+		if(! $tapped.hasClass('spa-chat-list-name')) {
 			return false;
 		}
 
@@ -417,7 +417,7 @@ export default class Spa_chat {
 			return false;
 		}
 
-		is_user = sender.get_is_user();
+		is_user = sender.get_is_user(sender);
 		if(! (is_user || sender_id === chatee.id)) {
 			this.configMap.chat_model.set_chatee(sender_id);
 		}
@@ -446,21 +446,26 @@ export default class Spa_chat {
 				select_class = 'spa-x-select';
 			}
 
+			list_html += `<div data-id="${person.id}" class="spa-chat-list-name ${select_class}">${person.name}</div>`
+
+		});
+		if(!list_html.length) {
 			list_html += `
 				<div class="spa-chat-list-note">
 					To chat alone is the fate of all great souls.. <br><br>
 					No one is online
 				</div>
 			`;
+		}
 
-			this._clearChat();
-			this.jqueryMap.$list_box.html(list_html);
-
-		});
+		this._clearChat();
+		this.jqueryMap.$list_box.html(list_html);
 	}
 
 	_onLogin(event, login_user) {
 		this.configMap.set_chat_anchor(this.configMap.spa_shell, 'opened');
+		// prepare chat list for user after login:
+		this._onListchange();
 	}
 
 	_onLogout(event, logout_user) {

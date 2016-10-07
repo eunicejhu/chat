@@ -81,7 +81,7 @@ export default class Spa_fake {
 				if(msg_type === "updatechat" && _callback_map.updatechat) {
 					setTimeout(() => {
 						let
-							user = this.stateMap.people.get_user();
+							user = this.stateMap.spa_model.people.get_user();
 						_callback_map.updatechat([{
 							dest_id: user.id,
 							dest_name: user.name,
@@ -107,16 +107,14 @@ export default class Spa_fake {
 				//create a handler for receipt of an updateavatar message.
 				if(msg_type === 'updateavatar' && _callback_map.listchange) {
 					//stimuate receipt of 'listchange' message
-					this.peopleList.forEach((person_map) => {
-						console.log("check item;", person_map._id);
+					this.peopleList.forEach(function(person_map){
 						if(person_map._id === data.person_id) {
 							person_map.css_map = data.css_map;
 							return false; //jump out of the iteration completely
 						}
-
-						//execute callback for the 'listchange' message
-						_callback_map.listchange([this.peopleList]);
-					})
+					});
+					//execute callback for the 'listchange' message
+					_callback_map.listchange([this.peopleList]);
 				}
 			};
 

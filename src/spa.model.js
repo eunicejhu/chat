@@ -146,39 +146,37 @@ export default class Spa_model {
 			//to refresh the people object when a new people list is received
 			_update_list = (arg_list) => {
 				let 
+					context = this,
 					person_map,
 					make_person_map,
 					people_list = arg_list[0],
 					is_chatee_online = false;
 				this._clearPeopleDb();
+				people_list.forEach(function(person_map){
+					if(!person_map.name) {
+						return false; // used to skip one iteration
+					} 
 
-				for(person_map in people_list) {
-					if(people_list.hasOwnProperty(person_map)) {
-						if(!person_map.name) {
-							return true; // used to skip one iteration
-						} 
-
-						//if user defined, update css_map and skip remainder
-						if(this.stateMap.user && this.stateMap.user.id === person_map._id) {
-							this.stateMap.user.css_map = person_map.css_map; 
-							return true;
-						}
-
-						make_person_map = {
-							cid: person_map._id,
-							css_map: person_map.css_map,
-							id: person_map._id,
-							name: person_map.name
-						};
-
-						person = this._makePerson(make_person_map);
-
-						if(chatee && chatee.id === make_person_map.id) {
-							is_chatee_online = true;
-							chatee = person;
-						}
+					//if user defined, update css_map and skip remainder
+					if(context.stateMap.user && context.stateMap.user.id === person_map._id) {
+						context.stateMap.user.css_map = person_map.css_map; 
+						return false;
 					}
-				}
+
+					make_person_map = {
+						cid: person_map._id,
+						css_map: person_map.css_map,
+						id: person_map._id,
+						name: person_map.name
+					};
+
+					person = context._makePerson(make_person_map);
+
+					if(chatee && chatee.id === make_person_map.id) {
+						is_chatee_online = true;
+						chatee = person;
+					}
+				});
 				this.stateMap.people_db.sort("name");
 				//if chatee is no longer online, we unset the chatee
 				//which triggers the 'spa-setchatee' global event
@@ -227,9 +225,10 @@ export default class Spa_model {
 					msg_text: msg_text
 				}
 				//we published updatechat so we can show our outgoing messages
+				// sio.on('updatechat', this._publish_updatechat.bind(this));
 				_publish_updatechat([msg_map]);
 				//??
-				sio.emit('udpate', msg_map);
+				sio.emit('updatechat', msg_map);
 				return true;
 
 			};

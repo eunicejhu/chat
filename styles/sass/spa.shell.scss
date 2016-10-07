@@ -13,31 +13,45 @@
     top: 0;
     left: 0;
     right: 0;
-    height: 40px;
+    height: 5em;
 }
 .spa-shell-head-logo {
     top: 4px;
     left: 4px;
     height: 32px;
-    width: 128px;
-    background: orange;
+    width: 20em;
+    // background: orange;
+
+    & p {
+        font-size: 20px;
+    }
 }
 .spa-shell-head-acct {
     top: 4px;
-    right: 0;
-    width: 64px;
+    right: 1em;
+    width: 160px;
     height: 32px;
+    line-height: 32px;
+    text-align: center;
+    color: white;
+    font-weight: 800;
     background: green;
+    border-radius: 3px;
+
+    &:hover {
+        cursor: pointer;
+        // box-shadow: 10px 10px 5px #888;
+    }
 }
 .spa-shell-head-search {
     top: 4px;
     right: 64px;
     width: 248px;
     height: 32px;
-    background: blue;
+    // background: blue;
 }
 .spa-shell-main {
-    top: 40px;
+    top: 5em;
     left: 0;
     bottom: 40px;
     right: 0;
