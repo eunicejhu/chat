@@ -17,10 +17,18 @@ packages=(
 		jquery.event.gevent
 		taffydb #jquery database plugin
 		jquery.event.ue
+
+		express
+		morgan
+		body-parser
+		method-override
+		errorhandler
+		serve-static
+		basic-auth
 	)
 
 ToDoPackages=(
-		
+		socket.io
 	)
 to_uninstall_packages=(
 	)

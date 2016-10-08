@@ -24,6 +24,7 @@ export default class Spa_shell {
 					<div class="spa-shell-head-search"></div>
 				</div>
 				<div class="spa-shell-main">
+					Socket demo
 					<div class="spa-shell-main-nav"></div>
 					<div class="spa-shell-main-content"></div>
 				</div>
@@ -52,7 +53,8 @@ export default class Spa_shell {
 		this.jqueryMap = {
 			$container: $container,
 			$acct: $container.find('.spa-shell-head-acct'),
-			$nav: $container.find('.spa-shell-main-nav')
+			$nav: $container.find('.spa-shell-main-nav'),
+			$search: $container.find(".spa-shell-head-search")
 		};
 	}
 

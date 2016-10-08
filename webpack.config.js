@@ -1,9 +1,9 @@
 let debug = process.env.NODE_ENV !== "production";
 let webpack = require('webpack');
 module.exports = {
-	entry: './src/spa.js',
+	entry: './public/src/spa.js',
 	output: {
-		filename: './dist/bundle.js'
+		filename: './public/dist/bundle.js'
 	},
 	module: {
 		preLoaders: [

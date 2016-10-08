@@ -7,10 +7,16 @@ require("jquery.event.gevent");
 class Spa {
 	initModule($container) {
 		let 
+			socket,
 			spa_model,
 			spa_shell = new Spa_shell();
+		socket = require('socket.io-client')('http://localhost:3002');
 		spa_shell.initModule($container);
 		spa_model = spa_shell.stateMap.spa_model;
+
+		socket.connect().on('message', (count) => {
+			spa_shell.jqueryMap.$search.html(count);
+		});
 	}
 }
 
