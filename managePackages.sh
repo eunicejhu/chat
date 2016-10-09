@@ -25,12 +25,15 @@ packages=(
 		errorhandler
 		serve-static
 		basic-auth
+		socket.io
 	)
 
 ToDoPackages=(
-		socket.io
+		
+		
 	)
 to_uninstall_packages=(
+	chokidar
 	)
 for package in "${ToDoPackages[@]}"
 do

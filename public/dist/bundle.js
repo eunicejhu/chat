@@ -72,12 +72,17 @@
 				var socket = void 0,
 				    spa_model = void 0,
 				    spa_shell = new _spa2.default();
-				socket = __webpack_require__(23)('http://localhost:3002');
+
 				spa_shell.initModule($container);
 				spa_model = spa_shell.stateMap.spa_model;
-
-				socket.connect().on('message', function (count) {
-					spa_shell.jqueryMap.$search.html(count);
+				socket = __webpack_require__(23)('http://localhost:3002');
+				//b is defined in data.js
+				spa_shell.jqueryMap.$search.html(b);
+				socket.connect().on('script', function (path) {
+					console.log('script updated');
+					$('#script_a').remove();
+					$('head').append("<script id=\"script_a\" src=\"" + path + "\"></script>");
+					spa_shell.jqueryMap.$search.html(b);
 				});
 			}
 		}]);

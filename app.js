@@ -13,6 +13,7 @@ let
 	basicAuth = require('basic-auth'),
 	auth,
 	routes = require('./routes'),
+	watch = require('./watch'),
 	countUp,
 	countIdx = 0;
 server = http.createServer(app);
@@ -34,10 +35,23 @@ auth = (request, response, next) => {
 app.set('env', 'development');
 
 //server configurations shared among all env
+app.use(function(request, response, next) {
+	console.log("ehllo",request.url, request.url.match(/js$/));
+	if(request.url.match(/js$/) !== null) {
+		console.log('yesm js');
+		watch.setWatch(request.url, 'script', io);
+	} else if(request.url.indexOf('/css/') >= 0) {
+		watch.setWatch(request.url, 'stylesheet', io);
+	}
+	next();
+});
 app.use(bodyParser());
 app.use(methodOverride());
+
 app.use(serveStatic(__dirname + '/public'));
+
 app.use(auth);
+
 
 switch(app.get('env')) {
 	case 'development':
@@ -61,18 +75,18 @@ switch(app.get('env')) {
 io.on('connection', (socket) => {
 	console.log('A user connected');
 });
-countUp = () => {
-	countIdx++;
-	io.sockets.send(countIdx);
-}
-setInterval(countUp, 1000);
+// countUp = () => {
+// 	countIdx++;
+// 	io.sockets.send(countIdx);
+// }
+// setInterval(countUp, 1000);
 
-countUp = () => {
-	countIdx ++;
-	console.log(countIdx);
-	//send the count to all listening sockets
-	io.sockets.send(countIdx);
-}
+// countUp = () => {
+// 	countIdx ++;
+// 	console.log(countIdx);
+// 	//send the count to all listening sockets
+// 	// io.sockets.send(countIdx);
+// }
 
 //routers
 routes.configRoutes(app, server);
