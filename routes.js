@@ -1,6 +1,14 @@
 'use strict';
 let 
-	configRoutes;
+	configRoutes,
+	mongodb = require('mongodb'),
+	mongoServer,
+	dbHandle;
+mongoServer = new mongodb.Server('localhost', 27017);
+dbHandle = new mongodb.Db('spa', mongoServer, {safe: true});
+dbHandle.open(() => {
+	console.log('*** Connected to MongoDb ***');
+});
 
 configRoutes = (app, server) => {
 	app.get('/', (request, response) => {

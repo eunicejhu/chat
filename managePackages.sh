@@ -29,11 +29,9 @@ packages=(
 	)
 
 ToDoPackages=(
-		
-		
+		mongodb
 	)
 to_uninstall_packages=(
-	chokidar
 	)
 for package in "${ToDoPackages[@]}"
 do

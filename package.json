@@ -33,6 +33,7 @@
     "jshint": "^2.9.3",
     "jshint-loader": "^0.8.3",
     "method-override": "^2.3.6",
+    "mongodb": "^2.2.10",
     "morgan": "^1.7.0",
     "node-sass": "^3.10.1",
     "sass-loader": "^4.0.2",
