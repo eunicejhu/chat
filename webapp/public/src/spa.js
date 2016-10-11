@@ -10,7 +10,6 @@ class Spa {
 			socket,
 			spa_model,
 			spa_shell = new Spa_shell();
-		
 		spa_shell.initModule($container);
 		spa_model = spa_shell.stateMap.spa_model;
 		socket = require('socket.io-client')('http://localhost:3002');
@@ -18,9 +17,9 @@ class Spa {
 		spa_shell.jqueryMap.$search.html(b); 
 		socket.connect().on('script', (path) => {
 			console.log('script updated');
-			$('#script_a').remove();
-			$('head').append(`<script id="script_a" src="${path}"></script>`)
-			spa_shell.jqueryMap.$search.html(b);
+			// $('#script_a').remove();
+			// $('head').append(`<script id="script_a" src="${path}"></script>`)
+			// spa_shell.jqueryMap.$search.html(b);
 		});
 	}
 }

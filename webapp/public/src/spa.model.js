@@ -1,3 +1,4 @@
+import Spa_data from './spa.data';
 import Spa_fake from './spa.fake';
 import {taffy as TAFFY} from 'taffydb';
 
@@ -78,7 +79,7 @@ export default class Spa_model {
 			is_connected: false // indicate if the user is currently in the chat room
 		};
 
-		this.isFakeData = true;
+		this.isFakeData = false;
 
 		this.personProto = {
 			get_is_user: (contextUser) => {
@@ -97,6 +98,7 @@ export default class Spa_model {
 			login: (name) => {
 				let 
 					sio = this.isFakeData ? this.stateMap.spa_fake.mockSio : this.stateMap.spa_data.getSio();
+
 				this.stateMap.user = this._makePerson({
 					cid: this._makeCid(),
 					css_map: {
@@ -109,11 +111,13 @@ export default class Spa_model {
 
 				sio.on('userupdate', this._completeLogin.bind(this));
 				//send an adduser message to the backend along with the user details
+				console.log("client emit adduser: ");
 				sio.emit('adduser', {
 					cid: this.stateMap.user.cid,
 					css_map: this.stateMap.user.css_map,
 					name: this.stateMap.user.name
 				});
+				console.log("client emit adduser: ");
 			},
 			logout: () => {
 				let 
@@ -323,6 +327,7 @@ export default class Spa_model {
 
 	initModule() {
 		let 
+			spa_data,
 			spa_fake,
 			people_list;
 		//initialize anonymous person
@@ -347,6 +352,10 @@ export default class Spa_model {
 					name: person_map.name
 				});
 			});
+		}
+		else {
+			spa_data = new Spa_data();
+			this.stateMap.spa_data = spa_data;
 		}
 	}
 	/**

@@ -6,8 +6,9 @@ let
 	makeMongoId = crud.makeMongoId;
 
 configRoutes = (app, server) => {
-	app.get('/', (request, response) => {
+	app.get('/', (request, response, next) => {
 		response.redirect('src/index.html');
+		next();
 	});
 
 	//interceptor

@@ -6,7 +6,7 @@ let
 	methodOverride = require('method-override'),
 	errorhandler = require('errorhandler'),
 	serveStatic = require('serve-static'),
-	socketIo = require('socket.io'),
+	// socketIo = require('socket.io'),
 	io,
 	app = express(),
 	server,
@@ -18,7 +18,7 @@ let
 	countIdx = 0;
 server = http.createServer(app);
 //instruct Socket.IO to listen using our HTTP server
-io = socketIo.listen(server);
+// io = socketIo.listen(server);
 auth = (request, response, next) => {
 	let user = basicAuth(request);
 	if(user === undefined 
@@ -35,16 +35,16 @@ auth = (request, response, next) => {
 app.set('env', 'development');
 
 //server configurations shared among all env
-app.use(function(request, response, next) {
-	console.log("ehllo",request.url, request.url.match(/js$/));
-	if(request.url.match(/js$/) !== null) {
-		console.log('yesm js');
-		watch.setWatch(request.url, 'script', io);
-	} else if(request.url.indexOf('/css/') >= 0) {
-		watch.setWatch(request.url, 'stylesheet', io);
-	}
-	next();
-});
+// app.use(function(request, response, next) {
+// 	console.log("ehllo",request.url, request.url.match(/js$/));
+// 	if(request.url.match(/js$/) !== null) {
+// 		console.log('yesm js');
+// 		watch.setWatch(request.url, 'script', io);
+// 	} else if(request.url.indexOf('/css/') >= 0) {
+// 		watch.setWatch(request.url, 'stylesheet', io);
+// 	}
+// 	next();
+// });
 app.use(bodyParser());
 app.use(methodOverride());
 
@@ -72,9 +72,9 @@ switch(app.get('env')) {
 
 //socket.io events
 
-io.on('connection', (socket) => {
-	console.log('A user connected');
-});
+// io.on('connection', (socket) => {
+// 	console.log('A user connected');
+// });
 // countUp = () => {
 // 	countIdx++;
 // 	io.sockets.send(countIdx);
@@ -90,6 +90,5 @@ io.on('connection', (socket) => {
 
 //routers
 routes.configRoutes(app, server);
-
 server.listen(3002);
 console.log('Express server listening on port %d in %s mode', server.address().port, app.env);
