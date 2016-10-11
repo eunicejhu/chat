@@ -52,3 +52,7 @@ db.user.update({
 db.user.remove({
 	"_id": ObjectId("57fbf84b0369d00046d8ce8a")
 });
+
+wget http://localhost:3002/horse/create --header='content-type: application/json' --post-data='{"css_map": {"color": "#ddd"}, "name": "Ed"}'
+
+wget http://localhost:3002/user/create --header='content-type: application/json'

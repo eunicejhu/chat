@@ -12,7 +12,7 @@ let
 	server,
 	basicAuth = require('basic-auth'),
 	auth,
-	routes = require('./routes'),
+	routes = require('./lib/routes'),
 	watch = require('./watch'),
 	countUp,
 	countIdx = 0;
@@ -50,7 +50,7 @@ app.use(methodOverride());
 
 app.use(serveStatic(__dirname + '/public'));
 
-app.use(auth);
+// app.use(auth);
 
 
 switch(app.get('env')) {
