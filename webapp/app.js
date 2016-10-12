@@ -16,9 +16,9 @@ let
 	watch = require('./watch'),
 	countUp,
 	countIdx = 0;
-server = http.createServer(app);
+server = http.Server(app);
+// io = socketIo(server);
 //instruct Socket.IO to listen using our HTTP server
-// io = socketIo.listen(server);
 auth = (request, response, next) => {
 	let user = basicAuth(request);
 	if(user === undefined 
@@ -91,4 +91,5 @@ switch(app.get('env')) {
 //routers
 routes.configRoutes(app, server);
 server.listen(3002);
+
 console.log('Express server listening on port %d in %s mode', server.address().port, app.env);

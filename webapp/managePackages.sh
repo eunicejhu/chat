@@ -27,10 +27,11 @@ packages=(
 		basic-auth
 		socket.io
 		mongodb
+		JSV #will be replaced by express-validation
 	)
 
 ToDoPackages=(
-		JSV #will be replaced by express-validation
+		express-validator
 	)
 to_uninstall_packages=(
 	)

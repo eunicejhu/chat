@@ -1,20 +1,21 @@
+// import socketIo from 'socket.io-client';
 export default class Spa_data {
 	constructor(props) {
 		this.stateMap = {sio: null};
-		this.io = require('socket.io-client')('http://localhost:3002');
 	}
 
 	makeSio() {
 		let 
-			socket = this.io.connect("/chat");
-		console.log("try to create socket, ", socket);
+			socket = io('http://localhost:3002/chat');
+		
 		return {
 			emit: (event_name, data) => {
+				console.log("try to create socket, data ", data);
 				socket.emit(event_name, data);
 			},
 			on: (event_name, callback) => {
-				socket.on(event_name, () => {
-					callback(arguments);
+				socket.on(event_name, (data) => {
+					callback(data);
 				})
 			}
 		};

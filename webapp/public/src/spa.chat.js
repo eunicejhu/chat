@@ -149,7 +149,6 @@ export default class Spa_chat {
 		this.jqueryMap.$head.bind('click', this._onClickToggle.bind(this));
 		this.jqueryMap.$list_box.bind('click', this._onTapList.bind(this));
 		this.jqueryMap.$send.bind('click', this._onSubmitMsg.bind(this));
-		this.jqueryMap.$send.bind('submit', this._onSubmitMsg.bind(this));
 		return true;
 	}
 	/**
@@ -352,6 +351,7 @@ export default class Spa_chat {
 		if(msg_text.trim() === '') {
 			return false;
 		}
+		console.log('_onSubmitMsg');
 		this.configMap.chat_model.send_msg(msg_text);
 		this.jqueryMap.$input.focus();
 		this.jqueryMap.$send.addClass('spa-x-select');

@@ -35,6 +35,10 @@ clearIsOnline = () => {
 	});
 }
 
+convertReturnedResult = (result_map) => {
+	return result_map.ops[0];
+}
+
 /****  Public Methods *****/
 //curently user is the only supported object type
 checkType = (obj_type) => {
@@ -52,18 +56,18 @@ constructObj = (obj_type, obj_map, callback) => {
 		callback(type_check_map);
 		return;
 	}
-
 	checkSchema(obj_type, obj_map, (error_list) => {
-		if(error_list.length === 0) {
+		if(error_list.errors.length === 0) {
 			dbHandle.collection(obj_type, (outer_error, collection) => {
 				let 
 					options_map = {safe: true};
 				collection.insert(obj_map, options_map, (inner_error, result_map) => {
-					callback(result_map);
+					callback(convertReturnedResult(result_map));
 				})
 			})
 		} else {
-			callback({
+			callback(
+			{
 				error_msg: 'Input document not valid',
 				error_list: error_list
 			});
@@ -85,14 +89,14 @@ readObj = (obj_type, find_map, fields_map, callback) => {
 	});
 };
 updateObj = (obj_type, find_map, set_map, callback) => {
-	let type_check_map = checkType(obj_type);
+	let 
+		type_check_map = checkType(obj_type);
 	if(type_check_map) {
 		callback(type_check_map);
 		return;
 	}
-
 	checkSchema(obj_type, set_map, (error_list) => {
-		if(error_list.length === 0) {
+		if(error_list.errors.length === 0) {
 			dbHandle.collection(obj_type, (outer_error, collection) => {
 				collection.update(
 					find_map, 

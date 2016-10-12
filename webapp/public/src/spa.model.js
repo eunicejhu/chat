@@ -110,6 +110,7 @@ export default class Spa_model {
 				});
 
 				sio.on('userupdate', this._completeLogin.bind(this));
+
 				//send an adduser message to the backend along with the user details
 				console.log("client emit adduser: ");
 				sio.emit('adduser', {
@@ -153,7 +154,7 @@ export default class Spa_model {
 					context = this,
 					person_map,
 					make_person_map,
-					people_list = arg_list[0],
+					people_list = arg_list,
 					is_chatee_online = false;
 				this._clearPeopleDb();
 				people_list.forEach(function(person_map){
@@ -190,18 +191,23 @@ export default class Spa_model {
 			};
 
 			_publish_listchange = (arg_list) => {
+				if(arg_list.length === 0) {
+					return;
+				}
 				_update_list(arg_list);
 				$.gevent.publish('spa-listchange', [arg_list]);
 			};
 
 			_publish_updatechat = (arg_list) => {
 				let 
-					msg_map = arg_list[0];
+					msg_map = arg_list;
 				if(!chatee) {
 					set_chatee(msg_map.sender_id);
 				} else if(msg_map.sender_id !== this.stateMap.user.id && msg_map.sender_id !== chatee.id) {
 					set_chatee(msg_map.sender_id);
 				}
+
+				console.log('publish-updatechat ----');
 
 				$.gevent.publish('spa-updatechat', [msg_map]);
 			};
@@ -230,8 +236,8 @@ export default class Spa_model {
 				}
 				//we published updatechat so we can show our outgoing messages
 				// sio.on('updatechat', this._publish_updatechat.bind(this));
-				_publish_updatechat([msg_map]);
 				//??
+				_publish_updatechat(msg_map);
 				sio.emit('updatechat', msg_map);
 				return true;
 
