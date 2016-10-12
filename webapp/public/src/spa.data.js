@@ -6,8 +6,8 @@ export default class Spa_data {
 
 	makeSio() {
 		let 
-			socket = io('http://localhost:3002/chat');
-		
+			socket = io('http://192.34.57.50/:8181/chat');
+
 		return {
 			emit: (event_name, data) => {
 				console.log("try to create socket, data ", data);
