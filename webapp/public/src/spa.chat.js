@@ -149,6 +149,12 @@ export default class Spa_chat {
 		this.jqueryMap.$head.bind('click', this._onClickToggle.bind(this));
 		this.jqueryMap.$list_box.bind('click', this._onTapList.bind(this));
 		this.jqueryMap.$send.bind('click', this._onSubmitMsg.bind(this));
+		$('body').on('keypress', this.jqueryMap.$send, (args) => {
+		    if (args.keyCode == 13) {
+		        this._onSubmitMsg.call(this);
+		        return false;
+		    }
+		});
 		return true;
 	}
 	/**

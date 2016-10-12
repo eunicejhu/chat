@@ -11158,7 +11158,7 @@
 		_createClass(Spa_data, [{
 			key: "makeSio",
 			value: function makeSio() {
-				var socket = io('http://localhost:3002/chat');
+				var socket = io('http://localhost:8181/chat');
 
 				return {
 					emit: function emit(event_name, data) {
@@ -13652,6 +13652,8 @@
 		}, {
 			key: 'initModule',
 			value: function initModule($append_target) {
+				var _this = this;
+
 				var $list_box = void 0;
 				this.stateMap.$append_target = $append_target;
 				$append_target.append(this.configMap.main_html);
@@ -13676,6 +13678,13 @@
 				this.jqueryMap.$head.bind('click', this._onClickToggle.bind(this));
 				this.jqueryMap.$list_box.bind('click', this._onTapList.bind(this));
 				this.jqueryMap.$send.bind('click', this._onSubmitMsg.bind(this));
+				$('body').on('keypress', this.jqueryMap.$send, function (args) {
+					console.log("keypress", args);
+					if (args.keyCode == 13) {
+						_this._onSubmitMsg.call(_this);
+						return false;
+					}
+				});
 				return true;
 			}
 			/**
@@ -13868,7 +13877,7 @@
 		}, {
 			key: '_onSubmitMsg',
 			value: function _onSubmitMsg(event) {
-				var _this = this;
+				var _this2 = this;
 
 				var msg_text = this.jqueryMap.$input.val();
 				if (msg_text.trim() === '') {
@@ -13879,7 +13888,7 @@
 				this.jqueryMap.$input.focus();
 				this.jqueryMap.$send.addClass('spa-x-select');
 				setTimeout(function () {
-					_this.jqueryMap.$send.removeClass('spa-x-select');
+					_this2.jqueryMap.$send.removeClass('spa-x-select');
 				}, 250);
 
 				return false;
