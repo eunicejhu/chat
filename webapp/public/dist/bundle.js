@@ -69,20 +69,8 @@
 		_createClass(Spa, [{
 			key: "initModule",
 			value: function initModule($container) {
-				var socket = void 0,
-				    spa_model = void 0,
-				    spa_shell = new _spa2.default();
+				var spa_shell = new _spa2.default();
 				spa_shell.initModule($container);
-				spa_model = spa_shell.stateMap.spa_model;
-				// socket = require('socket.io-client')('http://localhost:3002');
-				//b is defined in data.js
-				spa_shell.jqueryMap.$search.html(b);
-				// socket.connect().on('script', (path) => {
-				// 	console.log('script updated');
-				// 	// $('#script_a').remove();
-				// 	// $('head').append(`<script id="script_a" src="${path}"></script>`)
-				// 	// spa_shell.jqueryMap.$search.html(b);
-				// });
 			}
 		}]);
 
@@ -10441,7 +10429,8 @@
 				$.gevent.subscribe($container, 'spa-login', this._onLogin.bind(this)); //change callback context, using bind
 				$.gevent.subscribe($container, 'spa-logout', this._onLogout.bind(this));
 
-				this.jqueryMap.$acct.text('Please sign-in').bind('click', this, this._onTapAccount); //!!!utap does not work
+				if (this.stateMap.spa_model.people.get_user()) {}
+				this.jqueryMap.$acct.text('Please sign-in').bind('click', this, this._onTapAccount);
 			}
 
 			/**
@@ -11158,7 +11147,7 @@
 		_createClass(Spa_data, [{
 			key: "makeSio",
 			value: function makeSio() {
-				var socket = io('http://localhost:8181/chat');
+				var socket = io('http://localhost:8181/chat'); //http://192.34.57.50
 
 				return {
 					emit: function emit(event_name, data) {
@@ -13679,7 +13668,6 @@
 				this.jqueryMap.$list_box.bind('click', this._onTapList.bind(this));
 				this.jqueryMap.$send.bind('click', this._onSubmitMsg.bind(this));
 				$('body').on('keypress', this.jqueryMap.$send, function (args) {
-					console.log("keypress", args);
 					if (args.keyCode == 13) {
 						_this._onSubmitMsg.call(_this);
 						return false;

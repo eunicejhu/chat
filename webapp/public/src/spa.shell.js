@@ -105,9 +105,12 @@ export default class Spa_shell {
 		$.gevent.subscribe($container, 'spa-login', this._onLogin.bind(this));//change callback context, using bind
 		$.gevent.subscribe($container, 'spa-logout', this._onLogout.bind(this));
 
+		if(this.stateMap.spa_model.people.get_user()) {
+			
+		}
 		this.jqueryMap.$acct
 			.text('Please sign-in')
-			.bind('click', this, this._onTapAccount); //!!!utap does not work
+			.bind('click', this, this._onTapAccount);
 	}	
 
 	/**
