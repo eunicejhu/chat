@@ -6,12 +6,13 @@ $darkGray: #444;
 $black: #404040;
 $white: #fff;
 $yellow: #ff0;
+$mainColor: #26a69a;
 
 .spa-chat {
 	position: absolute;
 	bottom: 0;
 	right: 0;
-	width: 25em;
+	width: 30em;
 	background: #fff;
 	border-radius: 0.5em 0 0 0;
 	border-style: solid;
@@ -28,9 +29,9 @@ $yellow: #ff0;
 	top: 0;
 	height: 2em;
 	line-height: 1.8em;
-	border-bottom: thin solid $gray;
+	border-bottom: thin solid $mainColor;
 	cursor: pointer;
-	background: $gray;
+	background: $mainColor;
 	color: white;
 	font-family: arial, helvetica, sans-serif;
 	font-weight: 800;
@@ -121,8 +122,8 @@ $yellow: #ff0;
 	overflow-y: auto;
 	border-width: thin 0 thin thin;
 	border-style: solid;
-	border-color: $gray;
-	background-color: $gray;
+	border-color: $mainColor;
+	background-color: $mainColor;
 	color: $lightGray;
 	border-radius: 0.5em 0 0 0;
 	margin: 1.2em;
@@ -158,21 +159,16 @@ $yellow: #ff0;
 	position: absolute;
 	right: 0;
 	width: 25%;
-	height: 2.3em;
-	line-height: 2.3em;
+	height: 2.1em;
+	line-height: 2.1em;
 	text-align: center;
 	color: white;
-	background-color: #aaa;
+	background-color: $mainColor;
 	font-weight: 800;
 	cursor: pointer;
 }
 .spa-chat-msg-send:hover,
 .spa-chat-msg-send.spa-x-select {
-	background-color: #444;
+	background-color: $mainColor;
 	color: #ff0;
-}
-
-.spa-chat-head:hover
-.spa-chat-head-toggle {
-	background-color: $hoverGray;
 }
