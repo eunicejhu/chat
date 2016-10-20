@@ -1,3 +1,6 @@
+$mainColor: #26a69a;
+$gray: #eee;
+
 .spa-shell-head,
 .spa-shell-head-logo,
 .spa-shell-head-acct,
@@ -10,50 +13,53 @@
     position: absolute;
 }
 .spa-shell-head {
+    margin: 0 auto;
     top: 0;
     left: 0;
     right: 0;
-    height: 5em;
+    height: 6em;
+    padding: 0 10%;
+    color: white;
+    background-color: $mainColor;
 }
 .spa-shell-head-logo {
     top: 4px;
-    left: 4px;
+    left: 10%;
     height: 32px;
-    width: 20em;
-    // background: orange;
+    width: 30em;
 
     & p {
         font-size: 20px;
     }
 }
 .spa-shell-head-acct {
-    top: 4px;
-    right: 1em;
+    top: 1.6em;
+    right: 10%;
     width: 160px;
     height: 32px;
     line-height: 32px;
     text-align: center;
-    color: white;
+    color: $mainColor;
     font-weight: 800;
-    background: green;
+    background: white;
     border-radius: 3px;
 
     &:hover {
         cursor: pointer;
-        // box-shadow: 10px 10px 5px #888;
+        background-color: $gray;
+        box-shadow: 2px 2px 2px $gray;
     }
 }
 .spa-shell-head-search {
     top: 4px;
     right: 64px;
-    width: 248px;
+    // width: 248px;
     height: 32px;
     color: red;
     font-size: 32px;
-    // background: blue;
 }
 .spa-shell-main {
-    top: 5em;
+    top: 6em;
     left: 0;
     bottom: 40px;
     right: 0;
@@ -65,7 +71,7 @@
 }
 .spa-shell-main-nav {
     width: 250px;
-    background: #eee;
+    background: white;
 }
 .spa-x-closed .spa-shell-main-nav {
     width: 0;
@@ -73,7 +79,7 @@
 .spa-shell-main-content {
     left: 250px;
     right: 0;
-    background: #ddd;
+    background: white;
 }
 .spa-x-closed .spa-shell-main-content {
     left: 0;

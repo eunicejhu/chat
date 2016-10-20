@@ -18,7 +18,7 @@ export default class Spa_shell {
 			 	<div class="spa-shell-head">
 					<div class="spa-shell-head-logo">
 						<h1>Chat </h1>
-						<p>A Single Page Application</p>
+						<p>Techical stack: Nodejs, Express, MongoDB</p>
 					</div>
 					<div class="spa-shell-head-acct"></div>
 					<div class="spa-shell-head-search"></div>

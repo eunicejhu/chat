@@ -10352,7 +10352,7 @@
 					}
 				},
 				resize_interval: 200,
-				main_html: "\n\t\t\t \t<div class=\"spa-shell-head\">\n\t\t\t\t\t<div class=\"spa-shell-head-logo\">\n\t\t\t\t\t\t<h1>Chat </h1>\n\t\t\t\t\t\t<p>A Single Page Application</p>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class=\"spa-shell-head-acct\"></div>\n\t\t\t\t\t<div class=\"spa-shell-head-search\"></div>\n\t\t\t\t</div>\n\t\t\t\t<div class=\"spa-shell-main\">\n\t\t\t\t\tSocket demo\n\t\t\t\t\t<div class=\"spa-shell-main-nav\"></div>\n\t\t\t\t\t<div class=\"spa-shell-main-content\"></div>\n\t\t\t\t</div>\n\t\t\t\t<div class=\"spa-shell-foot\"></div>\n\t\t\t\t<div class=\"spa-shell-modal\"></div>\n\t\t\t "
+				main_html: "\n\t\t\t \t<div class=\"spa-shell-head\">\n\t\t\t\t\t<div class=\"spa-shell-head-logo\">\n\t\t\t\t\t\t<h1>Chat </h1>\n\t\t\t\t\t\t<p>Techical stack: Nodejs, Express, MongoDB</p>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class=\"spa-shell-head-acct\"></div>\n\t\t\t\t\t<div class=\"spa-shell-head-search\"></div>\n\t\t\t\t</div>\n\t\t\t\t<div class=\"spa-shell-main\">\n\t\t\t\t\tSocket demo\n\t\t\t\t\t<div class=\"spa-shell-main-nav\"></div>\n\t\t\t\t\t<div class=\"spa-shell-main-content\"></div>\n\t\t\t\t</div>\n\t\t\t\t<div class=\"spa-shell-foot\"></div>\n\t\t\t\t<div class=\"spa-shell-modal\"></div>\n\t\t\t "
 			};
 			this.stateMap = {
 				$container: null,
@@ -15328,7 +15328,7 @@
 
 
 	// module
-	exports.push([module.id, ".spa-shell-head,\n.spa-shell-head-logo,\n.spa-shell-head-acct,\n.spa-shell-head-search,\n.spa-shell-main,\n.spa-shell-main-nav,\n.spa-shell-main-content,\n.spa-shell-foot,\n.spa-shell-modal {\n  position: absolute; }\n\n.spa-shell-head {\n  top: 0;\n  left: 0;\n  right: 0;\n  height: 5em; }\n\n.spa-shell-head-logo {\n  top: 4px;\n  left: 4px;\n  height: 32px;\n  width: 20em; }\n  .spa-shell-head-logo p {\n    font-size: 20px; }\n\n.spa-shell-head-acct {\n  top: 4px;\n  right: 1em;\n  width: 160px;\n  height: 32px;\n  line-height: 32px;\n  text-align: center;\n  color: white;\n  font-weight: 800;\n  background: green;\n  border-radius: 3px; }\n  .spa-shell-head-acct:hover {\n    cursor: pointer; }\n\n.spa-shell-head-search {\n  top: 4px;\n  right: 64px;\n  width: 248px;\n  height: 32px;\n  color: red;\n  font-size: 32px; }\n\n.spa-shell-main {\n  top: 5em;\n  left: 0;\n  bottom: 40px;\n  right: 0; }\n\n.spa-shell-main-content,\n.spa-shell-main-nav {\n  top: 0;\n  bottom: 0; }\n\n.spa-shell-main-nav {\n  width: 250px;\n  background: #eee; }\n\n.spa-x-closed .spa-shell-main-nav {\n  width: 0; }\n\n.spa-shell-main-content {\n  left: 250px;\n  right: 0;\n  background: #ddd; }\n\n.spa-x-closed .spa-shell-main-content {\n  left: 0; }\n\n.spa-shell-foot {\n  bottom: 0;\n  left: 0;\n  right: 0;\n  height: 40px; }\n\n.spa-shell-modal {\n  display: none;\n  /*margin-top: -200px;\n    margin-left: -200px;\n    top: 50%;\n    left: 50%;\n    width: 400px;\n    height: 400px;\n    background: #fff;\n    border-radius: 3px;\n    z-index: 2;*/ }\n", ""]);
+	exports.push([module.id, ".spa-shell-head,\n.spa-shell-head-logo,\n.spa-shell-head-acct,\n.spa-shell-head-search,\n.spa-shell-main,\n.spa-shell-main-nav,\n.spa-shell-main-content,\n.spa-shell-foot,\n.spa-shell-modal {\n  position: absolute; }\n\n.spa-shell-head {\n  margin: 0 auto;\n  top: 0;\n  left: 0;\n  right: 0;\n  height: 6em;\n  padding: 0 10%;\n  color: white;\n  background-color: #26a69a; }\n\n.spa-shell-head-logo {\n  top: 4px;\n  left: 10%;\n  height: 32px;\n  width: 30em; }\n  .spa-shell-head-logo p {\n    font-size: 20px; }\n\n.spa-shell-head-acct {\n  top: 1.6em;\n  right: 10%;\n  width: 160px;\n  height: 32px;\n  line-height: 32px;\n  text-align: center;\n  color: #26a69a;\n  font-weight: 800;\n  background: white;\n  border-radius: 3px; }\n  .spa-shell-head-acct:hover {\n    cursor: pointer;\n    background-color: #eee;\n    box-shadow: 2px 2px 2px #eee; }\n\n.spa-shell-head-search {\n  top: 4px;\n  right: 64px;\n  height: 32px;\n  color: red;\n  font-size: 32px; }\n\n.spa-shell-main {\n  top: 6em;\n  left: 0;\n  bottom: 40px;\n  right: 0; }\n\n.spa-shell-main-content,\n.spa-shell-main-nav {\n  top: 0;\n  bottom: 0; }\n\n.spa-shell-main-nav {\n  width: 250px;\n  background: white; }\n\n.spa-x-closed .spa-shell-main-nav {\n  width: 0; }\n\n.spa-shell-main-content {\n  left: 250px;\n  right: 0;\n  background: white; }\n\n.spa-x-closed .spa-shell-main-content {\n  left: 0; }\n\n.spa-shell-foot {\n  bottom: 0;\n  left: 0;\n  right: 0;\n  height: 40px; }\n\n.spa-shell-modal {\n  display: none;\n  /*margin-top: -200px;\n    margin-left: -200px;\n    top: 50%;\n    left: 50%;\n    width: 400px;\n    height: 400px;\n    background: #fff;\n    border-radius: 3px;\n    z-index: 2;*/ }\n", ""]);
 
 	// exports
 
@@ -15389,7 +15389,6 @@
 	 * Versions
 	 *  1.3.x   - Removed all console references
 	 *          - Change bind to on, unbind to off
-	 *          - Reinstated ignore_select to ignore text and input areas by default
 	 *  1.2.x   - ignore_class => ignore_select, now defaults to ''
 	 *  1.1.9   - Fixed ue-test.html demo to scale properly
 	 *  1.1.8   - Removed prevent default from non-ue events
@@ -15433,7 +15432,7 @@
 	      bound_ns_map  : {},         // Map of bound namespaces e.g.
 	                                  // bound_ns_map.utap.fred
 	      px_radius     : 10,         // Tolerated distance before dragstart
-	      ignore_select : 'textarea, select, input', // Elements to ignore
+	      ignore_select : '',         // Selector of elements to ignore (e.g. :input)
 	      max_tap_ms    : 200,        // Maximum time allowed for tap
 	      min_held_ms   : 300         // Minimum time require for long-press
 	    },
