@@ -92,4 +92,4 @@ switch(app.get('env')) {
 routes.configRoutes(app, server);
 server.listen(8181);
 
-console.log('Express server listening on port %d in %s mode', server.address().port, app.env);
+

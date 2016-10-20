@@ -64,6 +64,13 @@ $gray: #eee;
     bottom: 40px;
     right: 0;
 }
+.spa-shell-main-image {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    text-align: center;
+    margin-top: 12%;
+}
 .spa-shell-main-content,
 .spa-shell-main-nav {
     top: 0;

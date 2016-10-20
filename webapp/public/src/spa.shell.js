@@ -24,9 +24,12 @@ export default class Spa_shell {
 					<div class="spa-shell-head-search"></div>
 				</div>
 				<div class="spa-shell-main">
-					Socket demo
+					<div class="spa-shell-main-image">
+						<img src="../styles/images/chat.png" />
+					</div>
 					<div class="spa-shell-main-nav"></div>
-					<div class="spa-shell-main-content"></div>
+					<div class="spa-shell-main-content">
+					</div>
 				</div>
 				<div class="spa-shell-foot"></div>
 				<div class="spa-shell-modal"></div>

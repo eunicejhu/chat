@@ -104,7 +104,7 @@ export default class Spa_model {
 					css_map: {
 						top: 25,
 						left: 25,
-						'background-color': '#8f8'
+						'background-color': '#26a69a'
 					},
 					name: name
 				});
